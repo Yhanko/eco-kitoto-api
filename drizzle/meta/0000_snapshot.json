@@ -1,0 +1,706 @@
+{
+  "id": "4af4cd97-8652-4e60-acf4-4e5d296aa8dd",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.eventoLimpeza": {
+      "name": "eventoLimpeza",
+      "schema": "",
+      "columns": {
+        "id_evento": {
+          "name": "id_evento",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_area": {
+          "name": "id_area",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_usuario": {
+          "name": "id_usuario",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data_evento": {
+          "name": "data_evento",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hora_evento": {
+          "name": "hora_evento",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descricao": {
+          "name": "descricao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_voluntario": {
+          "name": "total_voluntario",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 30
+        },
+        "voluntarios_atual": {
+          "name": "voluntarios_atual",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "ponto_encontro": {
+          "name": "ponto_encontro",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "estado": {
+          "name": "estado",
+          "type": "estado_limpeza",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Agendado'"
+        },
+        "dtcadastro": {
+          "name": "dtcadastro",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "eventoLimpeza_id_area_areaCritica_id_areaCritica_fk": {
+          "name": "eventoLimpeza_id_area_areaCritica_id_areaCritica_fk",
+          "tableFrom": "eventoLimpeza",
+          "tableTo": "areaCritica",
+          "columnsFrom": [
+            "id_area"
+          ],
+          "columnsTo": [
+            "id_areaCritica"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "eventoLimpeza_id_usuario_usuario_id_usuario_fk": {
+          "name": "eventoLimpeza_id_usuario_usuario_id_usuario_fk",
+          "tableFrom": "eventoLimpeza",
+          "tableTo": "usuario",
+          "columnsFrom": [
+            "id_usuario"
+          ],
+          "columnsTo": [
+            "id_usuario"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.dicaAI": {
+      "name": "dicaAI",
+      "schema": "",
+      "columns": {
+        "id_dica": {
+          "name": "id_dica",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "descricao": {
+          "name": "descricao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "categoria": {
+          "name": "categoria",
+          "type": "categoria_IA",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Higiene'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.areaCritica": {
+      "name": "areaCritica",
+      "schema": "",
+      "columns": {
+        "id_areaCritica": {
+          "name": "id_areaCritica",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "distrito_id": {
+          "name": "distrito_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descricao": {
+          "name": "descricao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "coordenada": {
+          "name": "coordenada",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nivel_criticidade": {
+          "name": "nivel_criticidade",
+          "type": "nivel_criticidade",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Baixo'"
+        },
+        "imagem": {
+          "name": "imagem",
+          "type": "varchar(254)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "estado": {
+          "name": "estado",
+          "type": "estado_areaCritica",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Pendente'"
+        },
+        "dtCadastro": {
+          "name": "dtCadastro",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "areaCritica_distrito_id_distrito_id_distrito_fk": {
+          "name": "areaCritica_distrito_id_distrito_id_distrito_fk",
+          "tableFrom": "areaCritica",
+          "tableTo": "distrito",
+          "columnsFrom": [
+            "distrito_id"
+          ],
+          "columnsTo": [
+            "id_distrito"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.distrito": {
+      "name": "distrito",
+      "schema": "",
+      "columns": {
+        "id_distrito": {
+          "name": "id_distrito",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "municipioId": {
+          "name": "municipioId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "distrito_municipioId_municipio_id_municipality_fk": {
+          "name": "distrito_municipioId_municipio_id_municipality_fk",
+          "tableFrom": "distrito",
+          "tableTo": "municipio",
+          "columnsFrom": [
+            "municipioId"
+          ],
+          "columnsTo": [
+            "id_municipality"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.material": {
+      "name": "material",
+      "schema": "",
+      "columns": {
+        "id_material": {
+          "name": "id_material",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "id_evento": {
+          "name": "id_evento",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "material_id_evento_areaCritica_id_areaCritica_fk": {
+          "name": "material_id_evento_areaCritica_id_areaCritica_fk",
+          "tableFrom": "material",
+          "tableTo": "areaCritica",
+          "columnsFrom": [
+            "id_evento"
+          ],
+          "columnsTo": [
+            "id_areaCritica"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.municipio": {
+      "name": "municipio",
+      "schema": "",
+      "columns": {
+        "id_municipality": {
+          "name": "id_municipality",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provinciaId": {
+          "name": "provinciaId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "municipio_provinciaId_provincia_id_provincia_fk": {
+          "name": "municipio_provinciaId_provincia_id_provincia_fk",
+          "tableFrom": "municipio",
+          "tableTo": "provincia",
+          "columnsFrom": [
+            "provinciaId"
+          ],
+          "columnsTo": [
+            "id_provincia"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.participacao": {
+      "name": "participacao",
+      "schema": "",
+      "columns": {
+        "id_participacao": {
+          "name": "id_participacao",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "id_evento": {
+          "name": "id_evento",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_usuario": {
+          "name": "id_usuario",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pontuacao": {
+          "name": "pontuacao",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "estado": {
+          "name": "estado",
+          "type": "estado_participacao",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Em Espera'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "participacao_id_evento_eventoLimpeza_id_evento_fk": {
+          "name": "participacao_id_evento_eventoLimpeza_id_evento_fk",
+          "tableFrom": "participacao",
+          "tableTo": "eventoLimpeza",
+          "columnsFrom": [
+            "id_evento"
+          ],
+          "columnsTo": [
+            "id_evento"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "participacao_id_usuario_usuario_id_usuario_fk": {
+          "name": "participacao_id_usuario_usuario_id_usuario_fk",
+          "tableFrom": "participacao",
+          "tableTo": "usuario",
+          "columnsFrom": [
+            "id_usuario"
+          ],
+          "columnsTo": [
+            "id_usuario"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.provincia": {
+      "name": "provincia",
+      "schema": "",
+      "columns": {
+        "id_provincia": {
+          "name": "id_provincia",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.relatorio": {
+      "name": "relatorio",
+      "schema": "",
+      "columns": {
+        "id_relatorio": {
+          "name": "id_relatorio",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "id_evento": {
+          "name": "id_evento",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "antes": {
+          "name": "antes",
+          "type": "varchar(254)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "depois": {
+          "name": "depois",
+          "type": "varchar(254)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "observacao": {
+          "name": "observacao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data_envio": {
+          "name": "data_envio",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "relatorio_id_evento_eventoLimpeza_id_evento_fk": {
+          "name": "relatorio_id_evento_eventoLimpeza_id_evento_fk",
+          "tableFrom": "relatorio",
+          "tableTo": "eventoLimpeza",
+          "columnsFrom": [
+            "id_evento"
+          ],
+          "columnsTo": [
+            "id_evento"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.usuario": {
+      "name": "usuario",
+      "schema": "",
+      "columns": {
+        "id_usuario": {
+          "name": "id_usuario",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "senha": {
+          "name": "senha",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "telefone": {
+          "name": "telefone",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tipoConta": {
+          "name": "tipoConta",
+          "type": "tipo_usuario",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Cidadão'"
+        },
+        "distrito_id": {
+          "name": "distrito_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dtCadastro": {
+          "name": "dtCadastro",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "usuario_distrito_id_distrito_id_distrito_fk": {
+          "name": "usuario_distrito_id_distrito_id_distrito_fk",
+          "tableFrom": "usuario",
+          "tableTo": "distrito",
+          "columnsFrom": [
+            "distrito_id"
+          ],
+          "columnsTo": [
+            "id_distrito"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "usuario_email_unique": {
+          "name": "usuario_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.categoria_IA": {
+      "name": "categoria_IA",
+      "schema": "public",
+      "values": [
+        "Higiene",
+        "Reciclagem",
+        "Saúde",
+        "Outros"
+      ]
+    },
+    "public.estado_limpeza": {
+      "name": "estado_limpeza",
+      "schema": "public",
+      "values": [
+        "Agendado",
+        "Em Andamento",
+        "Concluído"
+      ]
+    },
+    "public.nivel_criticidade": {
+      "name": "nivel_criticidade",
+      "schema": "public",
+      "values": [
+        "Baixo",
+        "Médio",
+        "Alto"
+      ]
+    },
+    "public.estado_areaCritica": {
+      "name": "estado_areaCritica",
+      "schema": "public",
+      "values": [
+        "Pendente",
+        "Em Limpeza",
+        "Resolvido"
+      ]
+    },
+    "public.estado_participacao": {
+      "name": "estado_participacao",
+      "schema": "public",
+      "values": [
+        "Em Espera",
+        "Confirmado",
+        "Concluído"
+      ]
+    },
+    "public.tipo_usuario": {
+      "name": "tipo_usuario",
+      "schema": "public",
+      "values": [
+        "Administrador",
+        "Administradora",
+        "Voluntário",
+        "Voluntária",
+        "Cidadão"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -1,0 +1,319 @@
+import { Request, Response } from "express";
+import { DrizzleClearEventRepository } from "../../infra/repositories/drizzleClearEventRepository";
+import { ListAllEvent } from "../../app/usecase/clearEvent/listAll";
+import { db } from "../../infra/database/db";
+import { clearEventTable } from "../../infra/database/schema";
+import { and, eq } from "drizzle-orm";
+import { CreateClearEvent } from "../../app/usecase/clearEvent/createClearEvent";
+import { UpdateClearEvent } from "../../app/usecase/clearEvent/updateClearEvent";
+import { DeleteClearEvent } from "../../app/usecase/clearEvent/deleteClearEvent";
+import { SearchClearEventById } from "../../app/usecase/clearEvent/searchClearEnventById";
+import { SearchClearEventByResponsibleUser } from "../../app/usecase/clearEvent/searchClearEventByResponsible";
+import { SearchClearEventByLocality } from "../../app/usecase/clearEvent/searchClearEventByLocality";
+import { SearchClearEventByTime } from "../../app/usecase/clearEvent/searchClearEventByTime";
+import { statusEnum } from "../interfaces/clearEventDTO";
+import { SearchClearEventByStatus } from "../../app/usecase/clearEvent/searchClearEventByStatus";
+import { UpdateCurrentVolunteer } from "../../app/usecase/clearEvent/updateCurrentVolunteer";
+
+export class ClearEventController {
+
+    constructor() {}
+
+//list all
+    async listAllEvent(request : Request, response : Response) {
+
+        const drizzleClearEventRepository = new DrizzleClearEventRepository()
+        const listAllEvent = new ListAllEvent(drizzleClearEventRepository)
+
+        try {
+                const event = await listAllEvent.execute()
+
+                return response.json(event)
+
+        } catch (error) {
+            
+            return response.json({ error : "Erro ao listar Eventos de Limpeza!"})
+        }
+    }
+
+//create
+    async create(request : Request, response : Response) {
+
+        const idEvent = crypto.randomUUID()
+        const current_volunteer = 0
+        const { title, areaId, responsibleId, eventDate, eventTime, descrition, max_volunteer,
+            meeting_point, estatus } = request.body
+
+        if(!title || !areaId || !responsibleId || !eventDate || !eventTime
+            || !descrition || !meeting_point) {
+
+            return response.json({ message : "Campos inválidos!"})
+        }
+
+        //verify if clear event is already exist
+        const existingEvent = await db.select().from(clearEventTable)
+        .where(and(
+            eq(clearEventTable.responsibleId, responsibleId),
+            eq(clearEventTable.eventDate, eventDate),
+            eq(clearEventTable.eventTime, eventTime)
+        )).limit(1)
+
+        if(existingEvent.length > 0) {
+
+            return response.json({ error : "Já existe um Evento de Limpeza com este responsável, na mesma data e hora!"})
+        }
+
+        const drizzleClearEventRepository = new DrizzleClearEventRepository()
+        const createEvent = new CreateClearEvent(drizzleClearEventRepository)
+
+        try {
+                const event = await createEvent.execute({
+                    idEvent : idEvent,
+                    title : title,
+                    areaId : areaId,
+                    responsibleId : responsibleId,
+                    eventDate : eventDate,
+                    eventTime : eventTime,
+                    descrition : descrition,
+                    max_volunteer : max_volunteer,
+                    current_volunteer : current_volunteer,
+                    meeting_point : meeting_point,
+                    estatus : estatus
+                })
+
+                return response.json(event)
+
+        } catch (error) {
+            
+            return response.json({ error : "Erro ao cadastrar Evento de Limpeza!"})
+        }
+    }
+
+//update
+    async update(request : Request, response : Response) {
+
+        const idEvent = String(request.params.id)
+        const { title, areaId, responsibleId, eventDate, eventTime, descrition,
+            max_volunteer, meeting_point, estatus } = request.body
+
+        if(!idEvent) {
+
+            return response.json({ message : "Evento de Limpeza não encontrado!"})
+        }
+
+        if(!title || !areaId || !responsibleId || !eventDate || !eventTime || !descrition
+            || !meeting_point
+        ) {
+            return response.json({ message : "Campos inválidos!"})
+        }
+
+        const drizzleClearEventRepository = new DrizzleClearEventRepository()
+        const updateClearEvent = new UpdateClearEvent(drizzleClearEventRepository)
+
+        try {
+                const event = updateClearEvent.update(
+                    idEvent,
+                    title,
+                    areaId,
+                    responsibleId,
+                    eventDate,
+                    eventTime,
+                    descrition,
+                    max_volunteer,
+                    meeting_point,
+                    estatus)
+
+                return response.json(event)
+
+        } catch (error) {
+            
+            return response.json({ error : "Erro ao alterar dados do Evento de Limpeza!"})
+        }
+    }
+
+//update current volunteer
+    async updateCurrentVolunteer(request : Request, response : Response) {
+
+        const idEvent = String(request.params.id)
+        const [ current_volunteer ] = request.body
+
+        const drizzleClearEventRepository = new DrizzleClearEventRepository()
+        const updateCurrentVolunteer = new UpdateCurrentVolunteer(drizzleClearEventRepository)
+
+        try {
+                await updateCurrentVolunteer.execute(idEvent, current_volunteer)
+
+                return response.json({ message : "Número de voluntários atualizados!"})
+                
+        } catch (error) {
+            return response.json({ error : "Erro ao atualizar número de voluntários participantes!"})
+        }
+    }
+
+//delete
+    async delete(request : Request, response : Response) {
+
+        const idEvent = String(request.params.id)
+
+        if(!idEvent) {
+
+            return response.json({ message : "Evento de Limpeza não encontrado!"})
+        }
+
+        const drizzleClearEventRepository = new DrizzleClearEventRepository()
+        const deleteClearEvent = new DeleteClearEvent(drizzleClearEventRepository)
+
+        try {
+                await deleteClearEvent.execute(idEvent)
+
+                return response.json({ message : "Evento de Limpeza eliminado com sucesso!"})
+
+        } catch (error) {
+            
+            return response.json({ error : "Erro ao eliminar Evento de Limpeza!"})
+        }
+    }
+
+//search by id
+    async searchById(request : Request, response : Response) {
+
+        const idEvent = String(request.params.id)
+
+        if(!idEvent) {
+
+            return response.json({ message : "Evento de Limpeza não encontrado!"})
+        }
+
+        const drizzleClearEventRepository = new DrizzleClearEventRepository()
+        const searchById = new SearchClearEventById(drizzleClearEventRepository)
+
+        try {
+                const event = await searchById.execute(idEvent)
+
+                return response.json(event)
+
+        } catch (error) {
+            
+            return response.json({ error : "Erro ao pesquisar Evento de Limpeza pelo ID!"})
+        }
+    }
+
+//search by responsible user name
+    async searchByResponsibleUser(request : Request, response : Response) {
+
+        const userName = String(request.params.usuario)
+
+        if(!userName) {
+
+            return response.json({ message : "Este usuário não está relacionado com nenhum evento de Limpeza!"})
+        }
+
+        const drizzleClearEventRepository = new DrizzleClearEventRepository()
+        const searchByResponsibleUser = new SearchClearEventByResponsibleUser(drizzleClearEventRepository)
+
+        try {
+                const event =  await searchByResponsibleUser.execute(userName)
+
+                return response.json(event)
+
+        } catch (error) {
+            
+            return response.json({ error : "Erro ao pesquisar os Eventos de Limpeza relacionado com este usuário!"})
+        }
+    }
+
+//search by clear event locality
+    async searchByLocality(request : Request, response : Response) {
+
+        const locality = String(request.params.bairro)
+
+        if(!locality) {
+
+            return response.json({ message : "Evento de Limpeza não encontrado!"})
+        }
+
+        const drizzleClearEventRepository = new DrizzleClearEventRepository()
+        const searchByLocality = new SearchClearEventByLocality(drizzleClearEventRepository)
+
+        try {
+                const event = await searchByLocality.execute(locality)
+
+                return response.json(event)
+
+        } catch (error) {
+            
+            return response.json({ error : "Erro ao pesquisar Evento de Limpeza pelo bairro!"})
+        }
+    }
+
+//search by time
+    async searchByTime(request : Request, response : Response) {
+
+        const eventTime = String(request.params.horas)
+
+        if(!eventTime) {
+
+            return response.json({ message : "Eventos de Limpeza não encontrados!"})
+        }
+
+        const drizzleClearEventRepository = new DrizzleClearEventRepository()
+        const searchByTime = new SearchClearEventByTime(drizzleClearEventRepository)
+
+        try {
+                const event = await searchByTime.execute(eventTime)
+
+                return response.json(event)
+
+        } catch (error) {
+            
+            return response.json({ error : "Erro ao pesquisar Eventos de Limpeza pelas horas!"})
+        }
+    }
+
+//search by status
+    async searchByStatus(request : Request, response : Response) {
+
+        const estatus = String(request.params.status) as statusEnum
+
+        if(!estatus) {
+
+            return response.json({ message : "Eventos de Limpeza não encontrado!"})
+        }
+
+        const drizzleClearEventRepository = new DrizzleClearEventRepository()
+        const searchByStatus = new SearchClearEventByStatus(drizzleClearEventRepository)
+
+        try {
+                const event = await searchByStatus.execute(estatus)
+
+                return response.json(event)
+
+        } catch (error) {
+            
+            return response.json({ error : "Erro ao pesquisar Eventos de Limpeza pelo status!"})
+        }
+    }
+
+/*/search by date 
+    async searchByDate(request : Request, response : Response) {
+
+        const eventDate = String(request.params.data)
+        const date = Date.parse(eventDate)
+        //const formatedDate = date.toISOString().split('T')[0]!
+        
+        if(!eventDate) {
+
+            return response.json({ message : "Evento de Limpeza não encontrado!"})
+        }
+
+        const drizzleClearEventRepository = new DrizzleClearEventRepository()
+        const searchByDate = new SearchClearEventByDate(drizzleClearEventRepository)
+
+        try {
+                //const event = await searchByDate.execute(eventDate)
+        } catch (error) {
+           // console.error(error)
+            return response.json({ error : "Erro ao pesquisar Eventos de Limpeza pela data!"})
+        }
+    } */
+}

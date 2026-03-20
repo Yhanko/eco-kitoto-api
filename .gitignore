@@ -1,0 +1,8 @@
+node_modules/
+.env
+.env.local
+
+//pasta de compilação e ferramentas
+dist/
+build/
+README.me

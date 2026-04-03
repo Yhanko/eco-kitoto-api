@@ -6,6 +6,7 @@ import { userRouter } from "./userRoute";
 import { criticalAreaRouter } from "./criticalAreaRoute";
 import { clearEventRouter } from "./clearEventRoute";
 import { volunteerRouter } from "./volunteerParticipationRoute";
+import { relatoryRouter } from "./relatoryRoute";
 
 const systemRouter = Router()
 
@@ -23,5 +24,7 @@ const systemRouter = Router()
     systemRouter.use("/eco-kitoto", clearEventRouter)
 //volunteer participation route
     systemRouter.use("/eco-kitoto", volunteerRouter)
+//relatory route
+    systemRouter.use("/eco-kitoto", relatoryRouter)
 
 export { systemRouter }

@@ -7,7 +7,7 @@ export interface CreateClearEventDTO {
     title : string,
     areaId : string,
     responsibleId : string,
-    eventDate : Date | string,
+    eventDate : Date,
     eventTime : string,
     descrition : string,
     max_volunteer : number,

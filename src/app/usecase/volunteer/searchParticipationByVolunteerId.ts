@@ -1,12 +1,12 @@
 import { VolunteerParticipation } from "../../domain/entities/volunteerParticipation";
 import { VolunteerParticipationRepository } from "../../domain/repositories/volunteerParticipationRepository";
 
-export class SearchParticipationByVolunteer {
+export class SearchParticipationByVolunteerId {
 
     constructor(private volunteerParticipationRepository : VolunteerParticipationRepository) {}
 
-    async execute(volunteerName : string) : Promise<VolunteerParticipation[] | null> {
+    async execute(volunteerId : string) : Promise<VolunteerParticipation[] | null> {
 
-        return await this.volunteerParticipationRepository.searchParticipationByVolunteer(volunteerName)
+        return await this.volunteerParticipationRepository.searchParticipationByVolunteerId(volunteerId)
     }
 }

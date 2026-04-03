@@ -66,23 +66,7 @@ export class DrizzleClearEventRepository implements ClearEventRepository {
 
 //create
     async create(data : CreateClearEventDTO): Promise<ClearEvent> {
-        
-        //verify if clear event is already exist
-        const existingEvent = await db.select()
-        .from(clearEventTable)
-        .where(
-            and(
-                eq(clearEventTable.responsibleId, data.responsibleId),
-                eq(clearEventTable.eventDate, String(data.eventDate)),
-                eq(clearEventTable.eventTime, data.eventTime)
-            )
-        ).limit(1)
-
-        if(existingEvent.length > 0) {
-
-            throw new Error("Não pode existir eventos diferentes com o mesmo responsável, na mesma data e hora!")
-        }
-
+    
         const [createEvent] = await db.insert(clearEventTable).values({
             id_event : data.idEvent,
             title : data.title,
@@ -503,6 +487,66 @@ export class DrizzleClearEventRepository implements ClearEventRepository {
         .innerJoin(provinceTable, eq(municipalityTable.provinceId, provinceTable.idprovince))
         .innerJoin(userTable, eq(clearEventTable.responsibleId, userTable.iduser))
         .where(eq(clearEventTable.estatus, estatus))
+        .orderBy(clearEventTable.eventDate)
+
+        return ClearEvent.map(p => ({
+            idEvent : p.idEvent ?? "",
+            title : p.title ?? "",
+            descrition : p.descrition ?? "",
+            areaId : p.areaId ?? "",
+            province : p.province ?? "",
+            municipality : p.municipality ?? "",
+            district : p.district ?? "",
+            coordenaties : p.coordenaties ?? "",
+            critical_level : p.critical_level as any,
+            image : p.image ?? "",
+            responsibleId : p.responsibleId ?? "",
+            responsibleName : p.responsibleName ?? "",
+            telephone : p.telephone ?? "",
+            eventDate : p.eventDate!,
+            eventTime : p.eventTime ?? "",
+            meeting_point : p.meeting_point ?? "",
+            max_volunteer : p.max_volunteer!,
+            current_volunteer : p.current_volunteer!,
+            estatus : p.estatus as any
+        }))
+    }
+
+//search clear event by user id and date and time
+    async searchClearEventByResponsibleAndDateAndTime(userId: string, date: Date, time: string): Promise<ClearEvent[] | null> {
+        
+        const ClearEvent = await db.select({
+            idEvent : clearEventTable.id_event,
+            title : clearEventTable.title,
+            descrition : clearEventTable.descrition,
+            areaId : clearEventTable.areaId,
+            province : provinceTable.name,
+            municipality : municipalityTable.name,
+            district : districtTable.name,
+            coordenaties : criticalAreaTable.coordenaties,
+            critical_level : criticalAreaTable.critical_level,
+            image : criticalAreaTable.image,
+            responsibleId : clearEventTable.responsibleId,
+            responsibleName : userTable.name,
+            telephone : userTable.telephone,
+            eventDate : clearEventTable.eventDate,
+            eventTime : clearEventTable.eventTime,
+            meeting_point : clearEventTable.meeting_point,
+            max_volunteer : clearEventTable.max_volunteer,
+            current_volunteer : clearEventTable.current_volunteer,
+            estatus : clearEventTable.estatus
+        })
+        .from(clearEventTable)
+        .innerJoin(criticalAreaTable, eq(clearEventTable.areaId, criticalAreaTable.idcriticalArea))
+        .innerJoin(districtTable, eq(criticalAreaTable.districtId, districtTable.id_district))
+        .innerJoin(municipalityTable, eq(districtTable.municipalityId, municipalityTable.idmunicipality))
+        .innerJoin(provinceTable, eq(municipalityTable.provinceId, provinceTable.idprovince))
+        .innerJoin(userTable, eq(clearEventTable.responsibleId, userTable.iduser))
+        .where(and(
+            eq(clearEventTable.responsibleId, userId),
+            eq(clearEventTable.eventDate, String(date)),
+            eq(clearEventTable.eventTime, time)
+        ))
         .orderBy(clearEventTable.eventDate)
 
         return ClearEvent.map(p => ({

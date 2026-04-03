@@ -24,8 +24,7 @@ export class CreateVolunteerParticipation {
         //verify if user already existing
         const existingUser = await this.userRepository.searchById(data.volunteerId)
 
-        if(!existingUser) {
-            console.log("Usuário não encontrado!")
+        if(!existingUser?.length) {
             throw new Error("Usuário não encontrado!")
         }
 

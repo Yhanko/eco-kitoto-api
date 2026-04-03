@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
 import { DrizzleClearEventRepository } from "../../infra/repositories/drizzleClearEventRepository";
 import { ListAllEvent } from "../../app/usecase/clearEvent/listAll";
-import { db } from "../../infra/database/db";
-import { clearEventTable } from "../../infra/database/schema";
-import { and, eq } from "drizzle-orm";
 import { CreateClearEvent } from "../../app/usecase/clearEvent/createClearEvent";
 import { UpdateClearEvent } from "../../app/usecase/clearEvent/updateClearEvent";
 import { DeleteClearEvent } from "../../app/usecase/clearEvent/deleteClearEvent";
@@ -14,6 +11,8 @@ import { SearchClearEventByTime } from "../../app/usecase/clearEvent/searchClear
 import { statusEnum } from "../interfaces/clearEventDTO";
 import { SearchClearEventByStatus } from "../../app/usecase/clearEvent/searchClearEventByStatus";
 import { UpdateCurrentVolunteer } from "../../app/usecase/clearEvent/updateCurrentVolunteer";
+import { SearchClearEventByDate } from "../../app/usecase/clearEvent/searchClearEventByDate";
+import { parse, format } from "date-fns"
 
 export class ClearEventController {
 
@@ -48,19 +47,6 @@ export class ClearEventController {
             || !descrition || !meeting_point) {
 
             return response.json({ message : "Campos inválidos!"})
-        }
-
-        //verify if clear event is already exist
-        const existingEvent = await db.select().from(clearEventTable)
-        .where(and(
-            eq(clearEventTable.responsibleId, responsibleId),
-            eq(clearEventTable.eventDate, eventDate),
-            eq(clearEventTable.eventTime, eventTime)
-        )).limit(1)
-
-        if(existingEvent.length > 0) {
-
-            return response.json({ error : "Já existe um Evento de Limpeza com este responsável, na mesma data e hora!"})
         }
 
         const drizzleClearEventRepository = new DrizzleClearEventRepository()
@@ -294,13 +280,21 @@ export class ClearEventController {
         }
     }
 
-/*/search by date 
+//search by date 
     async searchByDate(request : Request, response : Response) {
 
-        const eventDate = String(request.params.data)
-        const date = Date.parse(eventDate)
-        //const formatedDate = date.toISOString().split('T')[0]!
+        const eventDate = String(request.params.data).replace(/-/g, '\/')
+        const dateObject = new Date(eventDate)
+
+        const year = dateObject.getFullYear()
+        const month = String(dateObject.getMonth() + 1).padStart(2, '0')
+        const day = String(dateObject.getDate()).padStart(2, '0')
+        const date : string = `${year}-${month}-${day}`
+        const dateFormated = parse(date, 'yyyy-MM-dd', new Date())
+        const finalDate = format(dateFormated, 'yyyy-MM-dd')
         
+        console.log("data: "+dateFormated)
+
         if(!eventDate) {
 
             return response.json({ message : "Evento de Limpeza não encontrado!"})
@@ -310,10 +304,10 @@ export class ClearEventController {
         const searchByDate = new SearchClearEventByDate(drizzleClearEventRepository)
 
         try {
-                //const event = await searchByDate.execute(eventDate)
+                const event = await searchByDate.execute(dateFormated)
         } catch (error) {
            // console.error(error)
             return response.json({ error : "Erro ao pesquisar Eventos de Limpeza pela data!"})
         }
-    } */
+    } 
 }

@@ -154,8 +154,8 @@ export class DrizzleVolunteerParticipationRepository implements VolunteerPartici
         return idEvent[0]?.eventId!
     }
 
-//search by volunteer name
-    async searchParticipationByVolunteer(volunteerName: string): Promise<VolunteerParticipation[] | null> {
+//search by volunteer id
+    async searchParticipationByVolunteerId(volunteerId: string): Promise<VolunteerParticipation[] | null> {
         
         const listAll = await db.select({
             idparticipation : participationTable.id_participation,
@@ -181,7 +181,7 @@ export class DrizzleVolunteerParticipationRepository implements VolunteerPartici
         .innerJoin(districtTable, eq(criticalAreaTable.districtId, districtTable.id_district))
         .innerJoin(municipalityTable, eq(districtTable.municipalityId, municipalityTable.idmunicipality))
         .innerJoin(provinceTable, eq(municipalityTable.provinceId, provinceTable.idprovince))
-        .where(eq(userTable.name, volunteerName))
+        .where(eq(participationTable.volunteerId, volunteerId))
         
         return listAll.map(p => ({
             idparticipation : p.idparticipation ?? "",

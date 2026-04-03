@@ -10,7 +10,7 @@ export class CreateMunicipality {
         //verify if municipality is already exist
         const existingMunicipality = await this.municipalityRepository.searchByname(data.name)
 
-        if(!existingMunicipality) {
+        if(existingMunicipality?.length) {
             throw new Error("O município já existe!")
         }
 

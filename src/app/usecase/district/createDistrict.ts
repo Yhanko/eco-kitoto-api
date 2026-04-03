@@ -10,7 +10,7 @@ export class CreateDistrict {
         //verify if district is already exist
         const existingDistrict = await this.districtRepository.searchByName(data.name)
 
-        if(!existingDistrict) {
+        if(existingDistrict?.length) {
             throw new Error("O distrito já existe!")
         }
         

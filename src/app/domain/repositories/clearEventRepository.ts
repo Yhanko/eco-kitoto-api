@@ -18,4 +18,5 @@ export interface ClearEventRepository {
     searchClearEventByDate(date : Date) : Promise<ClearEvent[] | null>
     searchClearEventByTime(time : string) : Promise<ClearEvent[] | null>
     searchClearEventByStatus(estatus : statusEnum) : Promise<ClearEvent[] | null>
+    searchClearEventByResponsibleAndDateAndTime(userId: string, date: Date, time: string) : Promise<ClearEvent[] | null>
 }

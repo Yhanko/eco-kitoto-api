@@ -12,7 +12,7 @@ import { GetIdEventByParticipationId } from "../../app/usecase/volunteer/getIdEv
 import { RemoveCurrentVolunteer } from "../../app/usecase/clearEvent/removeCurrentVolunteer";
 import { PontuationUpdate } from "../../app/usecase/volunteer/pontuationUpdate";
 import { SearchParticipationById } from "../../app/usecase/volunteer/searchParticipationById";
-import { SearchParticipationByVolunteer } from "../../app/usecase/volunteer/searchParticipationByVolunteer";
+import { SearchParticipationByVolunteerId } from "../../app/usecase/volunteer/searchParticipationByVolunteerId";
 
 export class VolunteerParticipationController {
 
@@ -185,25 +185,26 @@ export class VolunteerParticipationController {
         }
     }
 
-//search participation by volunteer name
-    async searchByVolunteer(request : Request, response : Response) {
+//search participation by volunteer id
+    async searchByVolunteerId(request : Request, response : Response) {
 
-        const { volunteer } = request.body
+        const volunteerId = String(request.params.id)
 
-        if(!volunteer) {
+        if(!volunteerId) {
             return response.json({ message : "Voluntário não encontrado!"})
         }
 
         const drizzleVolunteerParticipationRepository = new DrizzleVolunteerParticipationRepository()
-        const searchParticipation = new SearchParticipationByVolunteer(drizzleVolunteerParticipationRepository)
+        const searchParticipation = new SearchParticipationByVolunteerId(drizzleVolunteerParticipationRepository)
 
         try {
-            const participation = await searchParticipation.execute(volunteer)
+            const participation = await searchParticipation.execute(volunteerId)
 
             return response.json(participation)
             
         } catch (error) {
+            console.log("error "+error)
             return response.json({ error : "Erro ao pesquisar Evento onde participaste ou estejas participando!"})
-        }
+        } 
     }
 }

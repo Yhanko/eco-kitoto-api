@@ -11,7 +11,7 @@ export class CreateProvince {
         //verify if province is already exist
         const existingProvince = await this.provinceRepository.searchByProvince(data.name)
 
-        if(!existingProvince) {
+        if(existingProvince?.length) {
             throw new Error("A província já existe!")
         }
 

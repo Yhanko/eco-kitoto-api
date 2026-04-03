@@ -14,5 +14,7 @@ const volunteerController = new VolunteerParticipationController()
     volunteerRouter.patch("/voluntarios/:id", volunteerController.pontuationUpdate)
 //search participation by id participation
     volunteerRouter.get("/voluntarios/:id", volunteerController.searchParticipationById)
+//search participation by volunteer id
+    volunteerRouter.get("/voluntarios/voluntario/:id", volunteerController.searchByVolunteerId)
 
 export { volunteerRouter }

@@ -23,6 +23,6 @@ const clearEventController = new ClearEventController()
 //search by status
     clearEventRouter.get("/evento-limpeza/status/:status", clearEventController.searchByStatus)
 //search by date
-    //clearEventRouter.get("/evento-limpeza/data/:data", clearEventController.searchByDate)
+    clearEventRouter.get("/evento-limpeza/data/:data", clearEventController.searchByDate)
 
 export { clearEventRouter }

@@ -8,6 +8,18 @@ export class CreateClearEvent {
 
     async execute(data : CreateClearEventDTO) : Promise<ClearEvent> {
 
+        /*
+            verify if exist a clear event with the same user responsible and 
+            the same date event and the same time event
+        */
+       const existingEvent = await this.clearEventRepository.searchClearEventByResponsibleAndDateAndTime(
+        data.responsibleId, data.eventDate, data.eventTime
+       )
+
+       if(existingEvent?.length) {
+            throw new Error("Não pode criar dois ou mais eventos na mesma data e hora!")
+       }
+
         const event = new ClearEvent(
             data.idEvent,
             data.title,

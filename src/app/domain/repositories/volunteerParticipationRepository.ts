@@ -7,5 +7,5 @@ export interface VolunteerParticipationRepository {
     listAll() : Promise<VolunteerParticipation[] | null>
     getIdEventByParticipationId(idparticipation: string) : Promise<string>
     searchParticipationById(idparticipation: string) : Promise<VolunteerParticipation[] | null>
-    searchParticipationByVolunteer(volunteerName: string) : Promise<VolunteerParticipation[] | null>
+    searchParticipationByVolunteerId(volunteerId: string) : Promise<VolunteerParticipation[] | null>
 }

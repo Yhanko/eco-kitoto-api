@@ -7,12 +7,12 @@ import { upload } from "../../utils/multer";
 const criticalAreaRouter = Router()
 const criticalAreaController = new CriticalAreaController()
 
-//list all
+//list all  
     criticalAreaRouter.get("/area-critica", authenticatedMiddleware, criticalAreaController.listAll)
 //create
     criticalAreaRouter.post("/area-critica/nova", authenticatedMiddleware, upload.single("image"), criticalAreaController.create)
 //update
-    criticalAreaRouter.patch("/area-critica/editar/:id", authenticatedMiddleware, criticalAreaController.update)
+    criticalAreaRouter.patch("/area-critica/editar/:id", authenticatedMiddleware, upload.single("image"), criticalAreaController.update)
 //delete
     criticalAreaRouter.delete("/area-critica/:id", authenticatedMiddleware, checkRoleMiddleware(['Administrador','Administradora']), criticalAreaController.delete)
 //search by id

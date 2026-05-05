@@ -18,7 +18,7 @@ export async function authenticatedMiddleware(request: Request, response: Respon
             //validating the token
             const decoded = await jwtProviderServices.verifyToken(String(token))
 
-            //send the user id to knwo, for egg, how is the responsible of any event
+            //send the user id to know, for egg, how is the responsible of any event
             request.user = {
                 id : decoded.id,
                 typeUser : decoded.typeUser

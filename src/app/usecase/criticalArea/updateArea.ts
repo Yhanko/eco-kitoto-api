@@ -7,7 +7,7 @@ export class UpdateArea {
 
     async execute(idcriticalArea: string, districtId: string, descrition: string,
             coordenaties: string, critical_level: levelEnum, image: string, estatus: statusEnum) {
-
+        
             return await this.criticalAreaRepository.update(
                 idcriticalArea,
                 districtId,

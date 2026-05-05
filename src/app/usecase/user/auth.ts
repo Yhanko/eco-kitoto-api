@@ -18,14 +18,14 @@ export class Authenticate {
         const user = await this.userRepository.findByEmail(data.email)
 
         if(!user) {
-            throw new Error("E-mail ou senha incorretos!")
+            throw new Error("E-mail ou senha incorretas!")
         }
 
         //verify if password hash is the same
         const verifyPassword = await this.hashProviderRepository.compareHash(data.password, user[0]?.password as any)
 
         if(!verifyPassword) {
-            throw new Error("E-mail ou senha incorretos!")
+            throw new Error("E-mail ou senha incorretas!")
         }
 
         //generate the token

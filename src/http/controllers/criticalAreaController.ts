@@ -40,20 +40,20 @@ export class CriticalAreaController {
         const { districtId, descrition, coordenaties, critical_level, estatus } = request.body
         const idcriticalArea = crypto.randomUUID()
         
-        if(!districtId || !descrition || !coordenaties || !critical_level) {
+       /* if(!districtId || !descrition || !coordenaties || !critical_level) {
 
             return response.json({ error : "Dados inválidos! Por favor, preencha todos os dados disponíveis."})
-        }
+        } */
 
         const drizzleCriticalAreaRepository = new DrizzleCriticalAreaRepository()
         const createCriticalArea = new CreateArea(drizzleCriticalAreaRepository)
-
+ 
         try {
                 let imageURL : string | undefined //get the url image
 
                 //verify if image exist
                 if(request.file) {
-
+                    
                     //converter image em jpg e otimizar
                     const buffer = await sharp(request.file.buffer).jpeg({ quality : 80 }).toBuffer()
 
@@ -79,6 +79,8 @@ export class CriticalAreaController {
                         "services"
                     )) as string
                 }
+
+                console.log(imageURL)
 
                 const area = await createCriticalArea.execute({
                     idcriticalArea : idcriticalArea,
@@ -110,9 +112,43 @@ export class CriticalAreaController {
             return response.json({ error : "Dados inválidos! Por favor, preencha todos os dados disponíveis."})
         }
 
+        let imageURL : string | undefined
+
+        if(request.file) {
+            //convert to JPG
+            const convertedBuffer = await sharp(request.file.buffer)
+            .jpeg({ quality : 80 })
+            .toBuffer()
+
+            //limite the max width to 2mb
+            if(convertedBuffer.length > 1024 * 1024 * 2) {
+                return ({
+                    request,
+                    description : "Limite excedido!",
+                    action_eng: "The image must have at most 2MB",
+                    action_pt: "A imagem precisa ter no máximo 2MB",
+                    message_eng: "Exceeded Image Size",
+                    message_pt: "Tamanho da imagem excedido",
+                });
+            }
+
+            // unique name to image
+            const filename = `service-${crypto.randomUUID()}`
+
+            //upload to cloudinary
+            imageURL = (await CloudinaryServices.upload(
+                convertedBuffer,
+                filename,
+                "services"
+            )) as string
+
+            //remove the last image if exist
+
+        }
+
         const drizzleCriticalAreaRepository = new DrizzleCriticalAreaRepository()
         const updateArea = new UpdateArea(drizzleCriticalAreaRepository)
-
+        
         try {
                 const area = updateArea.execute(
                     idcriticalArea,
@@ -120,7 +156,7 @@ export class CriticalAreaController {
                     descrition,
                     coordenaties,
                     critical_level,
-                    image,
+                    imageURL!,
                     estatus)
                 
                 return response.json(area)

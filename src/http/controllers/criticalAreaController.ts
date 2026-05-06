@@ -26,7 +26,16 @@ export class CriticalAreaController {
         try {
                 const allArea = await listAllArea.execute()
 
-                return response.json(allArea)
+                //nome do cloudinary
+                const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME
+                const baseURL = `https://res.cloudinary.com/${cloudinaryName}/image/upload`
+
+                const formatedAreas = await allArea?.map(p => ({
+                    ...p,
+                    image : p.image ? `${baseURL}${p.image}` : null
+                }))
+
+                return response.json(formatedAreas)
 
         } catch (error) {
             
@@ -141,8 +150,6 @@ export class CriticalAreaController {
                 filename,
                 "services"
             )) as string
-
-            //remove the last image if exist
 
         }
 

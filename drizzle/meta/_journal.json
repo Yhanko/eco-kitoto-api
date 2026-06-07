@@ -8,6 +8,13 @@
       "when": 1773149095757,
       "tag": "0000_criacao_das_entidades",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1780850120431,
+      "tag": "0001_criacao_dos_logs_e_implementacao_na_use_case_do_createEvent_e_no_controller",
+      "breakpoints": true
     }
   ]
 }

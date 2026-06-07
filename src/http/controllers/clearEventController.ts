@@ -13,6 +13,8 @@ import { SearchClearEventByStatus } from "../../app/usecase/clearEvent/searchCle
 import { UpdateCurrentVolunteer } from "../../app/usecase/clearEvent/updateCurrentVolunteer";
 import { SearchClearEventByDate } from "../../app/usecase/clearEvent/searchClearEventByDate";
 import { parse, format } from "date-fns"
+import { DrizzleLogsRepository } from "../../infra/repositories/drizzleLogsRepository";
+import { CreateLogs } from "../../app/usecase/logs/createLogs";
 
 export class ClearEventController {
 
@@ -53,7 +55,11 @@ export class ClearEventController {
         }
 
         const drizzleClearEventRepository = new DrizzleClearEventRepository()
-        const createEvent = new CreateClearEvent(drizzleClearEventRepository)
+        const drizzleLogsRepository = new DrizzleLogsRepository()
+        const createEvent = new CreateClearEvent(
+            drizzleClearEventRepository,
+            drizzleLogsRepository
+        )
 
         try {
                 const event = await createEvent.execute({
@@ -72,8 +78,21 @@ export class ClearEventController {
 
                 return response.json(event)
 
-        } catch (error) {
+        } catch (error : any) {
             
+            //log para capturar o erro a nivel da infraestrutura
+            const createLog = new CreateLogs(drizzleLogsRepository)
+
+            await createLog.execute({
+                level : "ERROR",
+                message : "Erro crítico na rota de cadastro de Evento de Limpeza",
+                metadata : {
+                    stack_trace : error.stack,
+                    ip : request.ip,
+                    path: request.originalUrl
+                }
+            })
+
             return response.json({ error : "Erro ao cadastrar Evento de Limpeza!"})
         }
     }

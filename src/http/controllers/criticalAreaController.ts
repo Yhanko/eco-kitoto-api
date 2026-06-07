@@ -26,16 +26,7 @@ export class CriticalAreaController {
         try {
                 const allArea = await listAllArea.execute()
 
-                //nome do cloudinary
-                const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME
-                const baseURL = `https://res.cloudinary.com/${cloudinaryName}/image/upload`
-
-                const formatedAreas = await allArea?.map(p => ({
-                    ...p,
-                    image : p.image ? `${baseURL}${p.image}` : null
-                }))
-
-                return response.json(formatedAreas)
+                return response.json(allArea)
 
         } catch (error) {
             
@@ -89,7 +80,7 @@ export class CriticalAreaController {
                     )) as string
                 }
 
-                console.log(imageURL)
+
 
                 const area = await createCriticalArea.execute({
                     idcriticalArea : idcriticalArea,
@@ -101,7 +92,6 @@ export class CriticalAreaController {
                     estatus
                 })
 
-                console.log(area)
                 return response.json(area)
 
         } catch (error) {

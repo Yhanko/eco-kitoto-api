@@ -1,4 +1,4 @@
-import { pgEnum, pgTable, uuid, varchar, timestamp, text, date, integer } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, uuid, varchar, timestamp, text, date, integer, jsonb } from "drizzle-orm/pg-core";
 
 //enums
 export const typeUserEnum = pgEnum("tipo_usuario", ["Administrador", "Administradora", "Voluntário", "Voluntária", "Cidadão"])
@@ -6,6 +6,7 @@ export const criticalLevelEnum = pgEnum("nivel_criticidade", ["Baixo", "Médio",
 export const criticalStatusEnum = pgEnum("estado_areaCritica", ["Pendente", "Em Limpeza", "Resolvido"])
 export const clearEventStatusEnum = pgEnum("estado_limpeza", ["Agendado", "Em Andamento", "Concluído"])
 export const participationStatusEnum = pgEnum("estado_participacao", ["Em Espera", "Confirmado", "Concluído"])
+export const levelEnum = pgEnum("level_logs", ["INFO", "WARN", "ERROR"])
 export const IACategoryEnum = pgEnum("categoria_IA", ["Higiene", "Reciclagem", "Saúde", "Outros"])
 
 // province table
@@ -130,4 +131,13 @@ export const comentaryIATable = pgTable("dicaAI", {
     title : varchar("titulo", { length : 100 }),
     description : text("descricao"),
     category : IACategoryEnum("categoria").notNull().default("Higiene")
+})
+
+//auditLogs
+export const logsTable = pgTable("logs", {
+    id_log : uuid("id_log").defaultRandom().primaryKey(),
+    createdAt : timestamp("dtCadastro").defaultNow(),
+    level : levelEnum("nivel").notNull().default("INFO"),
+    message : text("mensagem").notNull(),
+    metadata : jsonb("metadata").notNull()
 })

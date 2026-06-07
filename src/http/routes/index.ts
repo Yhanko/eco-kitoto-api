@@ -9,6 +9,7 @@ import { volunteerRouter } from "./volunteerParticipationRoute";
 import { relatoryRouter } from "./relatoryRoute";
 import { authRouter } from "./authRoute";
 import { materialRoutes } from "./materialRoute";
+import { logsRouter } from "./logsRoute";
 
 const systemRouter = Router()
 
@@ -32,5 +33,7 @@ const systemRouter = Router()
     systemRouter.use("/eco-kitoto", volunteerRouter)
 //relatory route
     systemRouter.use("/eco-kitoto", relatoryRouter)
+//logs route
+    systemRouter.use("/eco-kitoto", logsRouter)
 
 export { systemRouter }

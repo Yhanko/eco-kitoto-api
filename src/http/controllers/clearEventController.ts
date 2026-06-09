@@ -171,15 +171,43 @@ export class ClearEventController {
         }
 
         const drizzleClearEventRepository = new DrizzleClearEventRepository()
-        const deleteClearEvent = new DeleteClearEvent(drizzleClearEventRepository)
+        const drizzleLogsRepository = new DrizzleLogsRepository()
+        const deleteClearEvent = new DeleteClearEvent(
+            drizzleClearEventRepository,
+            drizzleLogsRepository
+        )
+        const logs = new CreateLogs(drizzleLogsRepository)
 
         try {
+                //log que regista a eliminação de um evento de limpeza
+                await logs.execute({
+                    level : "INFO",
+                    message : "Evento de Limpeza eliminado com sucesso",
+                    metadata : {
+                        Usuario_que_eliminou_o_evento : request.user.id,
+                        Perfil : request.user.typeUser
+                    }
+                })
+
                 await deleteClearEvent.execute(idEvent)
 
                 return response.json({ message : "Evento de Limpeza eliminado com sucesso!"})
 
-        } catch (error) {
-            
+        } catch (error : any) {
+
+            //log que regista a eliminação de um evento de limpeza
+            await logs.execute({
+                level : "ERROR",
+                message : "Erro crítico na rota que elimina o evento de limpeza",
+                metadata : {
+                    Usuario_que_tentou_eliminar_o_evento : request.user.id,
+                    Perfil : request.user.typeUser,
+                    stack_trace : error.stack,
+                    ip : request.ip,
+                    path : request.originalUrl
+                }
+            })
+
             return response.json({ error : "Erro ao eliminar Evento de Limpeza!"})
         }
     }

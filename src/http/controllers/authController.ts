@@ -3,6 +3,8 @@ import { DrizzleUserRepository } from "../../infra/repositories/drizzleUserRepos
 import { BCryptHashProviderServices } from "../../infra/services/BCryptHashProviderServices";
 import { JWTProviderServices } from "../../infra/services/JWTProviderServices";
 import { Authenticate } from "../../app/usecase/user/auth";
+import { DrizzleLogsRepository } from "../../infra/repositories/drizzleLogsRepository";
+import { CreateLogs } from "../../app/usecase/logs/createLogs";
 
 export class AuthController {
 
@@ -19,20 +21,36 @@ export class AuthController {
         const drizzleUserRepository = new DrizzleUserRepository()
         const hashProvider = new BCryptHashProviderServices()
         const jwtProvider = new JWTProviderServices()
+        const drizzleLogsRepository = new DrizzleLogsRepository()
 
         const authenticate = new Authenticate(
             drizzleUserRepository,
             hashProvider,
-            jwtProvider
+            jwtProvider,
+            drizzleLogsRepository
         )
 
         try {
                 const result = await authenticate.execute({ email, password})
  
-                return response.json(result)
+                return response.status(201).json(result)
 
-        } catch (error) {
-            return response.json({ error : "Erro ao autenticar usuário!"})
+        } catch (error : any) {
+
+            //regista o log caso aconteça algum erro interno
+            const logs = new CreateLogs(drizzleLogsRepository)
+
+            await logs.execute({
+                level : "ERROR",
+                message : "Erro crítico na rota de login",
+                metadata : {
+                    track_trace : error.track,
+                    ip : request.ip,
+                    path : request.originalUrl 
+                }
+            })
+
+            return response.status(400).json({ error : "Erro ao autenticar usuário!"})
         }
     }
 }

@@ -21,17 +21,17 @@ export class CreateClearEvent {
         data.responsibleId, data.eventDate, data.eventTime
        )
 
-       if(existingEvent?.length) {
+       if(existingEvent?.length !== null || existingEvent.length !== "") {
 
         //regista o log da tentativa de criar um evento na mesma hora e data pelo mesmo responsavel
             await this.logsRepository.create({
                 level : "WARN",
                 message : "Tentativa de criar dois eventos na mesma data e hora pelo mesmo responsável!",
                 metadata : {
-                    responsibleId : data.responsibleId,
-                    existentEventId : existingEvent[0]?.idEvent,
-                    existentEventTitle : existingEvent[0]?.title,
-                    newEventTitle : data.title
+                    Id_do_responsavel : data.responsibleId,
+                    Id_do_evento_existente : existingEvent?.[0]?.idEvent,
+                    Titulo_do_evento_existente : existingEvent?.[0]?.title,
+                    Titulo_do_novo_Evento : data.title
                 }
             })
 
@@ -57,11 +57,11 @@ export class CreateClearEvent {
             level : "INFO",
             message : "Evento de Limpeza criado com sucesso",
             metadata : {
-                responsibleId : data.responsibleId,
-                idEvent : data.idEvent,
-                eventTitle : data.title,
-                eventDate : data.eventDate,
-                eventTime : data.eventTime
+                Id_do_responsavel : data.responsibleId,
+                Id_do_Evento : data.idEvent,
+                Titulo_do_evento : data.title,
+                Data_do_evento : data.eventDate,
+                Hora_do_evento : data.eventTime
             }
         })
 

@@ -17,6 +17,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
     "@types/multer": "^2.0.0",
     "@types/node": "^25.2.0",
     "@types/pg": "^8.16.0",
@@ -24,6 +26,8 @@
     "@types/swagger-ui-express": "^4.1.8",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^1.41.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.1",

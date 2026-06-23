@@ -15,7 +15,6 @@ export class CreateMunicipality {
         }
 
         const municipality = new Municipality(
-            data.idmunicipality,
             data.name,
             data.provinceId
         )

@@ -31,8 +31,6 @@ export class RelatoryController {
 //create
     async create(request : Request, response : Response) {
 
-        const id = crypto.randomUUID()
-
         const { eventId, before_image, after_image, observation } = request.body
 
         if(!eventId || !before_image || !after_image) {
@@ -44,7 +42,6 @@ export class RelatoryController {
 
         try {
                 const relatory = await createRelatory.execute({
-                    idrelatory : id,
                     eventId : eventId,
                     before_image : before_image,
                     after_image : after_image,

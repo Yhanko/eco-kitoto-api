@@ -56,7 +56,6 @@ export class VolunteerParticipationController {
 //create
     async create(request : Request, response : Response) {
 
-        const idparticipation = crypto.randomUUID()
         const { eventId, pontuation, estatus } = request.body
 
         const volunteerId = request.user.id
@@ -90,7 +89,6 @@ export class VolunteerParticipationController {
                 if( volunteers < max_volunteer) {
                     
                     const volunteer = await createVolunteer.execute({
-                            idparticipation,
                             eventId : eventId,
                             volunteerId : volunteerId,
                             pontuation : Number(pontuation),

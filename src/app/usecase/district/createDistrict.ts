@@ -15,7 +15,6 @@ export class CreateDistrict {
         }
         
         const district = new District(
-            data.id_district,
             data.name,
             data.municipalityId
         )

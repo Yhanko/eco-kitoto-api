@@ -39,7 +39,6 @@ export class CreateClearEvent {
        }
                
         const event = new ClearEvent(
-            data.idEvent,
             data.title,
             data.areaId,
             data.responsibleId,
@@ -58,7 +57,6 @@ export class CreateClearEvent {
             message : "Evento de Limpeza criado com sucesso",
             metadata : {
                 Id_do_responsavel : data.responsibleId,
-                Id_do_Evento : data.idEvent,
                 Titulo_do_evento : data.title,
                 Data_do_evento : data.eventDate,
                 Hora_do_evento : data.eventTime

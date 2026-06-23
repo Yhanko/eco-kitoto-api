@@ -9,13 +9,13 @@ enum typeUserEnum {
 export class User {
     
     constructor(
-        public iduser : string,
         public name : string,
         public email : string,
         public password : string,
         public telephone : string,
         public typeUser : typeUserEnum,
         public districtId : string,
+        public iduser? : string
     ) {}
 
 }

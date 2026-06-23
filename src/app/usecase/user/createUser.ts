@@ -16,7 +16,6 @@ export class CreateUser {
         const hashedPassword = await this.hashProvider.generateHash(data.password)
 
         const user = new User (
-            data.iduser,
             data.name,
             data.email,
             hashedPassword,

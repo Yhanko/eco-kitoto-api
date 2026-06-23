@@ -40,7 +40,6 @@ export class ClearEventController {
 //create
     async create(request : Request, response : Response) {
 
-        const idEvent = crypto.randomUUID()
         const current_volunteer = 0
 
         const { title, areaId, eventDate, eventTime, descrition, max_volunteer,
@@ -63,7 +62,6 @@ export class ClearEventController {
 
         try {
                 const event = await createEvent.execute({
-                    idEvent : idEvent,
                     title : title,
                     areaId : areaId,
                     responsibleId : responsibleId,

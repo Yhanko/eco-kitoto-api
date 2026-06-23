@@ -35,7 +35,6 @@ export class CreateVolunteerParticipation {
         }
 
         const volunteerParticipation = new VolunteerParticipation(
-            data.idparticipation,
             data.eventId,
             data.volunteerId,
             data.pontuation,

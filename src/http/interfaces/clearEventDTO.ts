@@ -3,7 +3,6 @@ import { clearEventStatusEnum } from "../../infra/database/schema";
 export type statusEnum = (typeof clearEventStatusEnum.enumValues)[number]
 
 export interface CreateClearEventDTO {
-    idEvent : string,
     title : string,
     areaId : string,
     responsibleId : string,

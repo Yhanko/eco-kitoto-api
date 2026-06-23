@@ -75,7 +75,6 @@ export class MaterialController {
     async create(request : Request, response : Response) {
 
         const { eventId, name } = request.body
-        const id = crypto.randomUUID()
 
         if(!eventId || !name) {
             return response.json({ message : "Campos inválidos!"})
@@ -86,7 +85,6 @@ export class MaterialController {
 
         try {
                 const material = await createMaterial.execute({
-                    idmaterial : id,
                     eventId : eventId,
                     name : name
                 })

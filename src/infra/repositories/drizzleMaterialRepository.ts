@@ -32,7 +32,6 @@ export class DrizzleMaterialRepository implements MaterialRepository {
     async create(data : CreateMaterialDTO): Promise<Material> {
         
         const [createMaterial] = await db.insert(materialTable).values({
-            id_material : data.idmaterial,
             eventId : data.eventId,
             name : data.name
         }).returning()

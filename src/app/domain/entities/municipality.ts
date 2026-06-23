@@ -1,8 +1,8 @@
 export class Municipality {
 
     constructor(
-        public idmunicipality : string,
         public name : string,
-        public provinceId : string
+        public provinceId : string,
+        public idmunicipality? : string
     ) {}
 }

@@ -29,7 +29,6 @@ export class DistrictController {
     async create(request : Request, response : Response) {
 
         const { name, municipalityId } = request.body
-        const id_district = crypto.randomUUID()
 
         if(!name || !municipalityId) {
             return response.json({ message : "Campos inválidos!"})
@@ -40,7 +39,6 @@ export class DistrictController {
 
         try {
             const district = await createDistrict.execute({
-                id_district : id_district,
                 name : name,
                 municipalityId : municipalityId
             })

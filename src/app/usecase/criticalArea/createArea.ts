@@ -18,7 +18,6 @@ export class CreateArea {
         }
 
         const area = new CriticalArea(
-            data.idcriticalArea,
             data.districtId,
             data.descrition,
             data.coordenaties,

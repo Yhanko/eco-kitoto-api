@@ -15,7 +15,6 @@ export class CreateRelatory {
         }
 
         const relatory = new Relatory(
-            data.idrelatory,
             data.eventId,
             data.before_image,
             data.after_image,

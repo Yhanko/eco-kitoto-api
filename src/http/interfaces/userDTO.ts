@@ -13,7 +13,6 @@ export interface UserResponseDTO {
 }
 
 export interface CreateUserDTO {
-    iduser : string,
     name : string,
     email : string,
     password : string,

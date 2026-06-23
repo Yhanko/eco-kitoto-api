@@ -60,7 +60,6 @@ export class DrizzleVolunteerParticipationRepository implements VolunteerPartici
     async create(data : CreateVolunteerParticipationDTO): Promise<VolunteerParticipation> {
 
         const [volunteerParticipation] = await db.insert(participationTable).values({
-            id_participation : data.idparticipation,
             eventId : data.eventId,
             volunteerId : data.volunteerId,
             pontuation : data.pontuation,
@@ -78,7 +77,7 @@ export class DrizzleVolunteerParticipationRepository implements VolunteerPartici
 
 //pontuation update
     async pontuationUpdate(idparticipation: string, pontuation: number): Promise<void> {
-        
+
         await db.update(participationTable).set({
             pontuation : pontuation
         })
@@ -87,8 +86,7 @@ export class DrizzleVolunteerParticipationRepository implements VolunteerPartici
     }
 
 //delete
-    async delete(idparticipation: string): Promise<void> {
-        
+    async delete(idparticipation: string): Promise<void> {        
         await db.delete(participationTable)
         .where(eq(participationTable.id_participation, idparticipation))
     }

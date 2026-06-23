@@ -33,8 +33,6 @@ export class ProvinceController {
     async create(request : Request, response : Response) {
 
         const { name } = request.body
-        
-        const idprovince = crypto.randomUUID()
 
         if(!name) {
 
@@ -47,7 +45,6 @@ export class ProvinceController {
         try {
 
             const province = await createProvince.execute({
-                idprovince : idprovince,
                 name : name
             })
 

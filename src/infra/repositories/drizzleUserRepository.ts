@@ -48,7 +48,6 @@ export class DrizzleUserRepository implements UserRepository {
     async create(data : CreateUserDTO): Promise<User> {
         
         const [user] = await db.insert(userTable).values({
-            iduser : data.iduser,
             name : data.name,
             email : data.email,
             password : data.password,
@@ -90,8 +89,7 @@ export class DrizzleUserRepository implements UserRepository {
     }
 
 //delete
-    async delete(iduser: string): Promise<void> {
-        
+    async delete(iduser: string): Promise<void> {  
         await db.delete(userTable).where(eq(userTable.iduser, iduser))
     }
 

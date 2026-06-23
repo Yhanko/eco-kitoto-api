@@ -38,7 +38,6 @@ export class CriticalAreaController {
     async create(request : Request, response : Response) {
 
         const { districtId, descrition, coordenaties, critical_level, estatus } = request.body
-        const idcriticalArea = crypto.randomUUID()
         
        /* if(!districtId || !descrition || !coordenaties || !critical_level) {
 
@@ -83,7 +82,6 @@ export class CriticalAreaController {
 
 
                 const area = await createCriticalArea.execute({
-                    idcriticalArea : idcriticalArea,
                     districtId : districtId,
                     descrition : descrition,
                     coordenaties : coordenaties,

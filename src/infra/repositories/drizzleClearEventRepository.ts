@@ -68,7 +68,6 @@ export class DrizzleClearEventRepository implements ClearEventRepository {
     async create(data : CreateClearEventDTO): Promise<ClearEvent> {
     
         const [createEvent] = await db.insert(clearEventTable).values({
-            id_event : data.idEvent,
             title : data.title,
             areaId : data.areaId,
             responsibleId : data.responsibleId,

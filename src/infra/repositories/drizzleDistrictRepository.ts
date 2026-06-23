@@ -37,7 +37,6 @@ export class DrizzleDistrictRepository implements DistrictRepository {
 
         const [createDistrict] = await db.insert(districtTable)
         .values({
-            id_district : crypto.randomUUID(),
             name : data.name,
             municipalityId : data.municipalityId
         }).returning()

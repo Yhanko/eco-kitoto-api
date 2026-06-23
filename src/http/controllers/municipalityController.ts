@@ -32,7 +32,6 @@ export class MunicipalityController {
     async create(request : Request, response : Response) {
 
         const { name, provinceId } = request.body
-        const idmunicipality = crypto.randomUUID()
 
         if(!name || !provinceId) {
             return response.json({ message : "Preencha todos os campos para salvar!"})
@@ -43,7 +42,6 @@ export class MunicipalityController {
 
         try {
             const municipality = await createMunicipality.execute({
-                idmunicipality : idmunicipality,
                 name : name,
                 provinceId : provinceId
             })

@@ -32,7 +32,6 @@ export class UserController {
     async create(request : Request, response : Response) {
 
         const { name, email, password, telephone, typeUser, districtId } = request.body
-        const iduser = crypto.randomUUID()
 
         if(!name || !email || !password || !districtId) {
             return response.json({ message : "Os campos nome, email, palavra-passe ou bairro não podem ser vazios!"})
@@ -45,7 +44,6 @@ export class UserController {
         try {
             
             const user = await createUser.execute({
-                iduser : iduser,
                 name : name,
                 email : email,
                 password : password,
@@ -54,7 +52,7 @@ export class UserController {
                 districtId : districtId
             })
 
-            return response.json("Usuário criado com sucesso!")
+            return response.json(`Usuário ${user.name} criado com sucesso!`)
 
         } catch (error) {
             

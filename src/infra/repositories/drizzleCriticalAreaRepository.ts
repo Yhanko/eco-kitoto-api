@@ -51,7 +51,6 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
         
         const [creatArea] = await db.insert(criticalAreaTable)
         .values({
-            idcriticalArea : data.idcriticalArea,
             districtId : data.districtId,
             descrition : data.descrition,
             coordenaties : data.coordenaties,

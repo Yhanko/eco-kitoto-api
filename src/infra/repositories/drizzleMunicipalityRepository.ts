@@ -34,8 +34,6 @@ export class DrizzleMunicipalityRepository implements MunicipalityRepository {
     async create(data : CreateMunicipalityDTO): Promise<Municipality> {
         
         const [municipality] = await db.insert(municipalityTable).values({
-            
-            idmunicipality : crypto.randomUUID(),
             name : data.name,
             provinceId : data.provinceId
         }).returning()

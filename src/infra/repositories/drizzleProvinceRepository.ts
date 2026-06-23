@@ -13,13 +13,13 @@ export class DrizzleProvinceRepository implements ProvinceRepository {
     async listAll(): Promise<Province[]> {
         
         const listAll = await db.select({
-            "ID" : provinceTable.idprovince,
-            "Província" : provinceTable.name,
+            idprovince : provinceTable.idprovince,
+            province : provinceTable.name,
         }).from(provinceTable).orderBy(provinceTable.name)
 
         return listAll.map(p => ({
-            idprovince : p.ID,
-            name : p.Província,
+            idprovince : p.idprovince,
+            name : p.province,
         }))
     }
 
@@ -27,7 +27,6 @@ export class DrizzleProvinceRepository implements ProvinceRepository {
     async create(data : CreateProvinceDTO): Promise<Province> {
 
         const [createProvince] = await db.insert(provinceTable).values({
-            idprovince : crypto.randomUUID(),
             name : data.name
         }).returning()
 
@@ -41,9 +40,7 @@ export class DrizzleProvinceRepository implements ProvinceRepository {
     async update(idprovince : string, name : string): Promise<Province> {
         
         const [updateProvince] = await db.update(provinceTable).set({
-            
             name : name
-
         }).where(eq(provinceTable.idprovince, idprovince)).returning()
 
         return {
@@ -54,13 +51,12 @@ export class DrizzleProvinceRepository implements ProvinceRepository {
 
 //delete
     async delete(idprovince : string): Promise<void> {
-        
         await db.delete(provinceTable).where(eq(provinceTable.idprovince, idprovince))
     }
 
 //search by name of province
     async searchByProvince(name: string): Promise<Province[] | null> {
-        
+
         const user = await db.select()
         .from(provinceTable)
         .where(eq(provinceTable.name, name))

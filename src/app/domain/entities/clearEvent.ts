@@ -3,7 +3,6 @@ import { statusEnum } from "../../../http/interfaces/clearEventDTO";
 export class ClearEvent {
 
     constructor(
-        public idEvent : string,
         public title : string,
         public areaId : string,
         public responsibleId : string,
@@ -13,6 +12,7 @@ export class ClearEvent {
         public max_volunteer : number,
         public current_volunteer : number,
         public meeting_point : string,
-        public estatus : statusEnum
+        public estatus : statusEnum,
+        public idEvent? : string
     ) {}
 }

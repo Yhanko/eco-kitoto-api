@@ -62,7 +62,6 @@ export class DrizzleRelatoryRepository implements RelatoryRepository {
     async create(data : CreateRelatoryDTO): Promise<Relatory> {
 
         const [relatory] = await db.insert(relatoryTable).values({
-            id_relatory : data.idrelatory,
             eventId : data.eventId,
             before_image : data.before_image,
             after_image : data.after_image,
@@ -100,7 +99,6 @@ export class DrizzleRelatoryRepository implements RelatoryRepository {
 
 //delete
     async delete(idrelatory: string): Promise<void> {
-        
         await db.delete(relatoryTable).where(eq(relatoryTable.id_relatory, idrelatory))
     }
 

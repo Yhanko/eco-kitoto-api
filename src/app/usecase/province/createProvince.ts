@@ -16,7 +16,6 @@ export class CreateProvince {
         }
 
         const province = new Province(
-            data.idprovince,
             data.name
         )
 

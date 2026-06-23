@@ -8,7 +8,6 @@ export class CreateMaterial {
     async execute(data : CreateMaterialDTO) : Promise<Material> {
 
         const material = new Material(
-            data.idmaterial,
             data.eventId,
             data.name
         )

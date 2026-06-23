@@ -32,8 +32,22 @@ export class AuthController {
 
         try {
                 const result = await authenticate.execute({ email, password})
+
+                const isProduction = process.env.NODE_ENV === 'production'
+
+                //injetar o token no Cookie HttpOnly
+                response.cookie(
+                    'ecokitoto_token',
+                    result.token,
+                    {
+                        httpOnly : true, //segurança contra XSS(impede leitura via js) e cwe-613
+                        secure : isProduction, //no localhost será falso e na hospedagem web sera true
+                        sameSite : isProduction ? 'none' : 'lax', 
+                        maxAge : 2 * 60 * 60 * 1000 //2 horas em milisegundos
+                    }
+                )
  
-                return response.status(201).json(result)
+                return response.status(201).json({ user : result.user })
 
         } catch (error : any) {
 

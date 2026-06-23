@@ -11,7 +11,7 @@ export class JWTProviderServices implements JWTProviderRepository {
         
         const secret = process.env.JWT_SECRET || 'fallback_secret_para_dev'
         
-        const token = jwt.sign(payload, secret, { expiresIn : '1h'})
+        const token = jwt.sign(payload, secret, { expiresIn : '2h'})
 
         return token
     }

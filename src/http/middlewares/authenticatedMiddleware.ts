@@ -3,14 +3,12 @@ import { JWTProviderServices } from "../../infra/services/JWTProviderServices";
 
 export async function authenticatedMiddleware(request: Request, response: Response, next: NextFunction) {
     
-    const authHeader = request.headers.authorization
+    const token = request.cookies['ecokitoto_token']
     
     //verify if token was sended
-    if(!authHeader) {
-        return response.json({ message : "Token não fornecido. Por favor, faça login!"})
+    if(!token) {
+        return response.status(401).json({ message : "Token não fornecido. Por favor, faça login!"})
     }
-
-    const [, token] = authHeader.split(" ")
 
     try {
             const jwtProviderServices = new JWTProviderServices()
@@ -26,7 +24,19 @@ export async function authenticatedMiddleware(request: Request, response: Respon
 
             return next()
 
-    } catch (error) {
-        response.json({ error : "Token inválido ou expirado!"})
+    } catch (error : any) {
+        //se o erro foi gerado porque o tempo das 2horas acabou
+        if(error.name === 'TokenExpiredError') {
+            return response.status(401).json({ 
+                error : "Unauthorized", 
+                message : "A sua sessão expirou. Por favor, faça login novamente!"
+            })
+        }
+
+        //se for outro erro
+        return response.status(401).json({ 
+            error : "Unauthorized",
+            message : "Token Inválido ou Expirado!"
+        })
     }
 }

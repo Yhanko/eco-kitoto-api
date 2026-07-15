@@ -10,7 +10,11 @@ const criticalAreaController = new CriticalAreaController()
 //list all  
     criticalAreaRouter.get("/area-critica", authenticatedMiddleware, criticalAreaController.listAll)
 //create
-    criticalAreaRouter.post("/area-critica/nova", authenticatedMiddleware, upload.single("image"), criticalAreaController.create)
+    criticalAreaRouter.post("/area-critica/nova", authenticatedMiddleware, upload.fields([
+        { name : "image_1", maxCount : 1 },
+        { name : "image_2", maxCount : 1 },
+        { name : "image_3", maxCount : 1 }
+    ]), criticalAreaController.create)
 //update
     criticalAreaRouter.patch("/area-critica/editar/:id", authenticatedMiddleware, upload.single("image"), criticalAreaController.update)
 //delete

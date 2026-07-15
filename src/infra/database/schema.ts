@@ -60,7 +60,9 @@ export const criticalAreaTable = pgTable("areaCritica", {
     descrition : text("descricao"),
     coordenaties : text("coordenada"), //GeoJSON
     critical_level : criticalLevelEnum("nivel_criticidade").notNull().default("Baixo"),
-    image : varchar("imagem", { length : 254}).notNull(),
+    image_1 : varchar("imagem_1", { length : 254 }).notNull(),
+    image_2 : varchar("imagem_2", { length : 254 }),
+    image_3 : varchar("imagem_3", { length : 254 }),
     estatus : criticalStatusEnum("estado").notNull().default("Pendente"),
     createdAt : timestamp("dtCadastro").defaultNow()
 });

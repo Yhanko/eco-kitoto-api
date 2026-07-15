@@ -10,6 +10,7 @@ import { relatoryRouter } from "./relatoryRoute";
 import { authRouter } from "./authRoute";
 import { materialRoutes } from "./materialRoute";
 import { logsRouter } from "./logsRoute";
+import { emailRouter } from "./emailRoute";
 
 const systemRouter = Router()
 
@@ -35,5 +36,7 @@ const systemRouter = Router()
     systemRouter.use("/eco-kitoto", relatoryRouter)
 //logs route
     systemRouter.use("/eco-kitoto", logsRouter)
+//send email route
+    systemRouter.use("/eco-kitoto", emailRouter)
 
 export { systemRouter }

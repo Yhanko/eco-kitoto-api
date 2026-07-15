@@ -21,7 +21,9 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             coordenaties : criticalAreaTable.coordenaties,
             critical_level : criticalAreaTable.critical_level,
             estatus : criticalAreaTable.estatus,
-            image : criticalAreaTable.image,
+            image_1 : criticalAreaTable.image_1,
+            image_2 : criticalAreaTable.image_2,
+            image_3 : criticalAreaTable.image_3,
             descrition : criticalAreaTable.descrition,
             createdAt : criticalAreaTable.createdAt
         })
@@ -40,7 +42,9 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             coordenaties : p.coordenaties ?? "",
             critical_level : p.critical_level as any,
             estatus : p.estatus as any,
-            image : p.image ?? "",
+            image_1 : p.image_1 ?? "",
+            image_2 : p.image_2 ?? "",
+            image_3 : p.image_3 ?? "",
             descrition : p.descrition ?? "",
             createdAt : p.createdAt!
         }))
@@ -55,7 +59,9 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             descrition : data.descrition,
             coordenaties : data.coordenaties,
             critical_level : data.critical_level,
-            image : data.image,
+            image_1 : data.image_1,
+            image_2 : data.image_2,
+            image_3 : data.image_3,
             estatus : data.estatus
         }).returning()
 
@@ -65,20 +71,22 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             descrition : creatArea?.descrition ?? "",
             coordenaties : creatArea?.coordenaties ?? "",
             critical_level : creatArea?.critical_level!,
-            image : creatArea?.image ?? "",
+            image_1 : creatArea?.image_1 ?? "",
+            image_2 : creatArea?.image_2 ?? "",
+            image_3 : creatArea?.image_3 ?? "",
             estatus : creatArea?.estatus!
         }
     }
 
 //update
-    async update(idcriticalArea: string, districtId: string, descrition: string, coordenaties: string, critical_level: levelEnum, image: string, estatus: statusEnum): Promise<CriticalArea> {
+    async update(idcriticalArea: string, districtId: string, descrition: string, coordenaties: string, critical_level: levelEnum, image_1: string, estatus: statusEnum): Promise<CriticalArea> {
         
         const [area] = await db.update(criticalAreaTable).set({
             districtId : districtId,
             descrition : descrition,
             coordenaties : coordenaties,
             critical_level : critical_level,
-            image : image,
+            image_1 : image_1,
             estatus : estatus
         })
         .where(eq(criticalAreaTable.idcriticalArea, idcriticalArea))
@@ -90,7 +98,7 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             descrition : area?.descrition ?? "",
             coordenaties : area?.coordenaties ?? "",
             critical_level : area?.critical_level as any,
-            image : area?.image ?? "",
+            image_1 : area?.image_1 ?? "",
             estatus : area?.estatus as any
         }
     }
@@ -113,7 +121,7 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             coordenaties : criticalAreaTable.coordenaties,
             critical_level : criticalAreaTable.critical_level,
             estatus : criticalAreaTable.estatus,
-            image : criticalAreaTable.image,
+            image_1 : criticalAreaTable.image_1,
             descrition : criticalAreaTable.descrition,
             createdAt : criticalAreaTable.createdAt
        })
@@ -133,7 +141,7 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             coordenaties : p.coordenaties ?? "",
             critical_level : p.critical_level as any,
             estatus : p.estatus as any,
-            image : p.image ?? "",
+            image_1 : p.image_1 ?? "",
             descrition : p.descrition ?? "",
             createdAt : p.createdAt!
        }))
@@ -151,7 +159,7 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             coordenaties : criticalAreaTable.coordenaties,
             critical_level : criticalAreaTable.critical_level,
             estatus : criticalAreaTable.estatus,
-            image : criticalAreaTable.image,
+            image_1 : criticalAreaTable.image_1,
             descrition : criticalAreaTable.descrition,
             createdAt : criticalAreaTable.createdAt
        })
@@ -171,7 +179,7 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             coordenaties : p.coordenaties ?? "",
             critical_level : p.critical_level as any,
             estatus : p.estatus as any,
-            image : p.image ?? "",
+            image_1 : p.image_1 ?? "",
             descrition : p.descrition ?? "",
             createdAt : p.createdAt!
        }))
@@ -189,7 +197,7 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             coordenaties : criticalAreaTable.coordenaties,
             critical_level : criticalAreaTable.critical_level,
             estatus : criticalAreaTable.estatus,
-            image : criticalAreaTable.image,
+            image_1 : criticalAreaTable.image_1,
             descrition : criticalAreaTable.descrition,
             createdAt : criticalAreaTable.createdAt
        })
@@ -209,7 +217,7 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             coordenaties : p.coordenaties ?? "",
             critical_level : p.critical_level as any,
             estatus : p.estatus as any,
-            image : p.image ?? "",
+            image_1 : p.image_1 ?? "",
             descrition : p.descrition ?? "",
             createdAt : p.createdAt!
        }))
@@ -227,7 +235,7 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             coordenaties : criticalAreaTable.coordenaties,
             critical_level : criticalAreaTable.critical_level,
             estatus : criticalAreaTable.estatus,
-            image : criticalAreaTable.image,
+            image_1 : criticalAreaTable.image_1,
             descrition : criticalAreaTable.descrition,
             createdAt : criticalAreaTable.createdAt
        })
@@ -247,7 +255,7 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             coordenaties : p.coordenaties ?? "",
             critical_level : p.critical_level as any,
             estatus : p.estatus as any,
-            image : p.image ?? "",
+            image_1 : p.image_1 ?? "",
             descrition : p.descrition ?? "",
             createdAt : p.createdAt!
        }))
@@ -265,7 +273,7 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             coordenaties : criticalAreaTable.coordenaties,
             critical_level : criticalAreaTable.critical_level,
             estatus : criticalAreaTable.estatus,
-            image : criticalAreaTable.image,
+            image_1 : criticalAreaTable.image_1,
             descrition : criticalAreaTable.descrition,
             createdAt : criticalAreaTable.createdAt
        })
@@ -285,7 +293,7 @@ export class DrizzleCriticalAreaRepository implements CriticalAreaRepository {
             coordenaties : p.coordenaties ?? "",
             critical_level : p.critical_level as any,
             estatus : p.estatus as any,
-            image : p.image ?? "",
+            image_1 : p.image_1 ?? "",
             descrition : p.descrition ?? "",
             createdAt : p.createdAt!
        }))

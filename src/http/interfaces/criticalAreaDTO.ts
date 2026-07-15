@@ -8,6 +8,8 @@ export interface CreateCriticalAreaDTO {
     descrition : string,
     coordenaties : string,
     critical_level : levelEnum,
-    image : string,
-    estatus : statusEnum
+    image_1 : string,
+    estatus : statusEnum,
+    image_2? : string,
+    image_3? : string
 }

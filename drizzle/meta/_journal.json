@@ -15,6 +15,13 @@
       "when": 1780850120431,
       "tag": "0001_criacao_dos_logs_e_implementacao_na_use_case_do_createEvent_e_no_controller",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782567269831,
+      "tag": "0002_adicao_de_image2_e_image3_na_criticalAreaTable",
+      "breakpoints": true
     }
   ]
 }

@@ -10,8 +10,10 @@ export class CriticalArea {
         public descrition : string,
         public coordenaties : string,
         public critical_level : Critical_Level,
-        public image : string,
+        public image_1 : string,
         public estatus : Critical_Estatus,
+        public image_2? : string,
+        public image_3? : string,
         public idcriticalArea? : string
     ) {}
 }

@@ -12,6 +12,8 @@ import { SearchByCoordenaties } from "../../app/usecase/criticalArea/searchByCoo
 import { SearchByLocality } from "../../app/usecase/criticalArea/searchByLocality";
 import sharp from "sharp"
 import CloudinaryServices from "../../infra/services/storage/cloudinary/CloudinaryServices";
+import { DrizzleLogsRepository } from "../../infra/repositories/drizzleLogsRepository";
+import { CreateLogs } from "../../app/usecase/logs/createLogs";
 
 export class CriticalAreaController {
 
@@ -45,55 +47,102 @@ export class CriticalAreaController {
         } */
 
         const drizzleCriticalAreaRepository = new DrizzleCriticalAreaRepository()
-        const createCriticalArea = new CreateArea(drizzleCriticalAreaRepository)
+        const drizzleLogsRepository = new DrizzleLogsRepository()
+        const createCriticalArea = new CreateArea(
+            drizzleCriticalAreaRepository,
+            drizzleLogsRepository
+        )
  
         try {
+                const files = request.files as { [ fieldname : string] : Express.Multer.File[] } | undefined
+
+                //inicializacao das variaveis para guardar as URls das imagens
+                let imageURL1 : string | undefined
+                let imageURL2 : string | undefined
+                let imageURL3 : string | undefined
+
                 let imageURL : string | undefined //get the url image
 
-                //verify if image exist
-                if(request.file) {
+                //listar com os nomes dos inputs
+                const inputNames = ["image_1", "image_2", "image_3"]
+                const uploadedUrls : { [key : string] : string} = {}
+
+                //verify if images exists
+                if(files) {
                     
-                    //converter image em jpg e otimizar
-                    const buffer = await sharp(request.file.buffer).jpeg({ quality : 80 }).toBuffer()
+                   for(const fieldName of inputNames) {
 
-                    //1024 * 1024 * 2 equivale ha 2MB
-                    if(buffer.length > 1024 * 1024 * 2) {
+                    //verifica se o arquivo correspondente ao input atual foi enviado
+                    const fileArray = files[fieldName]
 
-                        return ({
-                            request,
-                            description : "Limite excedido!",
-                            action_eng: "The image must have at most 2MB",
-                            action_pt: "A imagem precisa ter no máximo 2MB",
-                            message_eng: "Exceeded Image Size",
-                            message_pt: "Tamanho da imagem excedido",
-                        });
+                    if(fileArray && fileArray.length > 0) {
+                        
+                        const currentFile = fileArray[0]! //garante que na seja nulo
+
+                        //converter image em jpg e otimizar
+                        const buffer = await sharp(currentFile.buffer).jpeg({ quality : 80 }).toBuffer()
+                        
+                        //1024 * 1024 * 2 equivale ha 2MB
+                        if(buffer.length > 1024 * 1024 * 2) {
+
+                            return ({
+                                request,
+                                description : "Limite excedido!",
+                                action_eng: "The image must have at most 2MB",
+                                action_pt: "A imagem precisa ter no máximo 2MB",
+                                message_eng: "Exceeded Image Size",
+                                message_pt: "Tamanho da imagem excedido",
+                            });
+                        }
+
+                        const fileName = `area-${crypto.randomUUID()}`
+
+                        //upload para cloudinary
+                        imageURL = (await CloudinaryServices.upload(
+                            buffer,
+                            fileName,
+                            "services"
+                        )) as string;
+
+                        //guarda a URL no objecto temporario usando o nome input como chave
+                        uploadedUrls[fieldName] = imageURL
                     }
-
-                    const fileName = `area-${crypto.randomUUID()}`
-
-                    //upload para cloudinary
-                    imageURL = (await CloudinaryServices.upload(
-                        buffer,
-                        fileName,
-                        "services"
-                    )) as string
+                   }
                 }
 
-
+                // atribui os resultados para as respectivas variaveis, caso existam
+                imageURL1 = uploadedUrls["image_1"]
+                imageURL2 = uploadedUrls["image_2"]
+                imageURL3 = uploadedUrls["image_3"]
 
                 const area = await createCriticalArea.execute({
                     districtId : districtId,
                     descrition : descrition,
                     coordenaties : coordenaties,
                     critical_level : critical_level,
-                    image : imageURL!,
+                    image_1 : imageURL!,
+                    image_2 : imageURL2 || "",
+                    image_3 : imageURL3 || "",
                     estatus
                 })
 
                 return response.json(area)
 
-        } catch (error) {
-            console.log(error)
+        } catch (error : any) {
+            //log para capturar o erro a nivel da infraestrutura
+            const createLog = new CreateLogs(drizzleLogsRepository)
+
+            await createLog.execute({
+                level : "ERROR",
+                message : "Erro crítico na rota de cadastro de área crítica",
+                metadata : {
+                    Id_do_usuario_que_tentou_cadastrar: request.user.id,
+                    stack_trace : error.stack,
+                    ip : request.ip,
+                    path: request.originalUrl
+                }
+            })
+
             return response.json({ error : "Erro ao cadastrar a Área Crítica! "})
         }
     }

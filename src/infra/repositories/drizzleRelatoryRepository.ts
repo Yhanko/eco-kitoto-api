@@ -4,7 +4,6 @@ import { RelatoryRepository } from "../../app/domain/repositories/relatoryReposi
 import { db } from "../database/db";
 import { clearEventTable, criticalAreaTable, districtTable, municipalityTable, provinceTable, relatoryTable, userTable } from "../database/schema";
 import { CreateRelatoryDTO } from "../../http/interfaces/relatoryDTO";
-import { after, before } from "node:test";
 
 export class DrizzleRelatoryRepository implements RelatoryRepository {
 

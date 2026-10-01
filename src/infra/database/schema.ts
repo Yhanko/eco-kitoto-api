@@ -6,6 +6,7 @@ export const criticalLevelEnum = pgEnum("nivel_criticidade", ["Baixo", "Médio",
 export const criticalStatusEnum = pgEnum("estado_areaCritica", ["Pendente", "Em Limpeza", "Resolvido"])
 export const clearEventStatusEnum = pgEnum("estado_limpeza", ["Agendado", "Em Andamento", "Concluído"])
 export const participationStatusEnum = pgEnum("estado_participacao", ["Em Espera", "Confirmado", "Concluído"])
+export const typePublishEnum = pgEnum("tipo_publicacao", ["Limpeza", "Conquista", "Denúncia", "Dica", "Evento"])
 export const levelEnum = pgEnum("level_logs", ["INFO", "WARN", "ERROR"])
 export const IACategoryEnum = pgEnum("categoria_IA", ["Higiene", "Reciclagem", "Saúde", "Outros"])
 
@@ -126,6 +127,24 @@ export const relatoryTable = pgTable("relatorio", {
     observation : text("observacao").notNull(),
     date_send : timestamp("data_envio").defaultNow()
 });
+
+// publish
+export const publishTable = pgTable("publicacao", {
+    id_publish : uuid("id_publicacao").defaultRandom().primaryKey(),
+    user_id : uuid("id_usuario").notNull().references( () => userTable.iduser, {
+        onDelete : "cascade",
+        onUpdate : "cascade"
+    }),
+    type_publish : typePublishEnum("tipo_publicacao").notNull().default("Limpeza"),
+    comentary : text("comentario").notNull(),
+    volunteer_quantity : integer("qtd_voluntario"),
+    trash_quantity : integer("qtd_lixo"),
+    reation : integer("reacao").default(0),
+    image_url : text("imagem_url").array().default([]),
+    video_url : text("video_url"),
+    location : text("localicacao"),
+    createdAt : timestamp("dtcadastro").defaultNow()
+})
 
 // IA comentary
 export const comentaryIATable = pgTable("dicaAI", {

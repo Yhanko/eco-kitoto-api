@@ -11,6 +11,7 @@ import { authRouter } from "./authRoute";
 import { materialRoutes } from "./materialRoute";
 import { logsRouter } from "./logsRoute";
 import { emailRouter } from "./emailRoute";
+import { publishRouter } from "./publishRoute";
 
 const systemRouter = Router()
 
@@ -38,5 +39,7 @@ const systemRouter = Router()
     systemRouter.use("/eco-kitoto", logsRouter)
 //send email route
     systemRouter.use("/eco-kitoto", emailRouter)
+//published route
+    systemRouter.use("/eco-kitoto", publishRouter)
 
 export { systemRouter }

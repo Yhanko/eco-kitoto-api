@@ -93,6 +93,19 @@ export class DrizzlePublishRepository implements PublishRepository {
         }))
     }
 
+//list all publish reation
+    async listAllReation(id_publish: string): Promise<number> {
+        
+        const allReation = await db.select({
+            reation : publishTable.reation
+        })
+        .from(publishTable)
+        .where(eq(publishTable.id_publish, id_publish))
+        .limit(1)
+
+        return allReation[0]?.reation!
+    }
+
 //create
     async create(data: CreatePublishDTO): Promise<Publish> {
         
@@ -150,25 +163,20 @@ export class DrizzlePublishRepository implements PublishRepository {
     }
 
 //reation update
-    async updateReation(id_publish: string, reation: number): Promise<Publish> {
+    async addReation(id_publish: string, reation: number): Promise<void> {
         
-        const [publish] = await db.update(publishTable).set({
-            reation : reation
+        await db.update(publishTable).set({
+            reation : reation + 1
         }).returning()
         .where(eq(publishTable.id_publish, id_publish))
+    }
 
-        return {
-            id_publish : publish?.id_publish ?? "",
-            user_id : publish?.user_id ?? "",
-            type_publish : publish?.type_publish!,
-            comentary : publish?.comentary!,
-            volunteer_quantity : publish?.volunteer_quantity ?? undefined,
-            trash_quantity : publish?.trash_quantity ?? undefined,
-            reation : publish?.reation ?? 0,
-            image_url : publish?.image_url ?? [],
-            video_url : publish?.video_url ?? "",
-            location : publish?.location ?? ""
-        }
+//remove reation
+    async removeReation(id_publish: string, reation: number): Promise<void> {
+        await db.update(publishTable).set({
+            reation : reation - 1
+        }).returning()
+        .where(eq(publishTable.id_publish, id_publish))
     }
 
 //delete

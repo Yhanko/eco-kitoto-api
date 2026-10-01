@@ -201,7 +201,6 @@ export class VolunteerParticipationController {
             return response.json(participation)
             
         } catch (error) {
-            console.log("error "+error)
             return response.json({ error : "Erro ao pesquisar Evento onde participaste ou estejas participando!"})
         } 
     }

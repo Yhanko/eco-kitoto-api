@@ -253,11 +253,11 @@ const userController = new UserController()
  *         description: Usuário não encontrado.
  */
 
-//======== LIST ALL USERS ========
-    userRouter.get("/usuarios", authenticatedMiddleware, checkRoleMiddleware(['Administrador','Administradora']), userController.listAll)
-
-    //create
-    userRouter.post("/usuarios/novo", userController.create)
+//======== USERS ROUTES ========
+//list all users
+userRouter.get("/usuarios", authenticatedMiddleware, checkRoleMiddleware(['Administrador','Administradora']), userController.listAll)
+//create
+userRouter.post("/usuarios/novo", userController.create)
 //update
     userRouter.patch("/usuarios/editar/:id", authenticatedMiddleware, userController.update)
 //delete

@@ -101,7 +101,8 @@ export class CriticalAreaController {
                         imageURL = (await CloudinaryServices.upload(
                             buffer,
                             fileName,
-                            "services"
+                            "services",
+                            "image"
                         )) as string;
 
                         //guarda a URL no objecto temporario usando o nome input como chave

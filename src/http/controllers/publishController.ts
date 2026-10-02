@@ -10,6 +10,8 @@ import { Update } from "../../app/usecase/publish/update";
 import { AddReation } from "../../app/usecase/publish/addReation";
 import { RemoveReation } from "../../app/usecase/publish/removeReation";
 import { DeletePublish } from "../../app/usecase/publish/deletePublish";
+import sharp from "sharp";
+import CloudinaryServices from "../../infra/services/storage/cloudinary/CloudinaryServices";
 
 export class PublishController {
     constructor() {}
@@ -74,7 +76,7 @@ export class PublishController {
     async create(request : Request, response : Response) {
 
         const { user_id, type_publish, comentary, volunteer_quantity, trash_quantity,
-            reation, image_url, video_url, location } = request.body
+            reation, location } = request.body
         
         if(!user_id) {
             return response.status(400).json({ message : "Usuário obrigatório!"})
@@ -93,21 +95,85 @@ export class PublishController {
         )
 
         try {
-            const newUser = {
+
+            const files = request.files as { [ fieldname : string ] : Express.Multer.File[] } | undefined
+
+            //inicializacao das variaveis para guardar as URls das imagens
+            let image_url : string[] = []
+            let video_url : string | undefined = undefined
+
+            //verify if images or video exist
+            if(files) {
+                
+                //processa o array de imagens
+                const imageFiles = files['image_url']
+
+                if(imageFiles && imageFiles.length > 0) {
+
+                    image_url = await Promise.all(
+                        imageFiles.map(async (file, index) => {
+
+                            //optimizacao da imagem e conversao
+                            const buffer = await sharp(file.buffer).jpeg({ quality : 80 }).toBuffer()
+
+                            //1024 * 1024 * 2 equivale ha 2MB
+                        
+                            if(buffer.length > 1024 * 1024 * 2) {
+
+                                throw new Error(`A imagem ${file.originalname} excede o limite máximo de 2MB.`)
+                            }
+
+                            //salva no cloudinary
+                            const fileName = `pub_${Date.now()}_img_${index}`
+
+                            return await CloudinaryServices.upload(
+                                buffer,
+                                fileName,
+                                "publishes",
+                                "image"
+                            )
+                        })
+                    )
+                }
+
+                //processa o video
+                const videoFiles = files["video_url"]
+
+                if(videoFiles && videoFiles.length > 0) {
+
+                    const videoFile = videoFiles[0]
+
+                    if(videoFile && videoFile.buffer) {
+
+                        const fileName = `pub_${Date.now()}_video`
+                        //upload do video
+                        video_url = await CloudinaryServices.upload(
+                            videoFile.buffer,
+                            fileName,
+                            "publishes",
+                            "video"
+                        )
+                    }
+                    
+                }
+            }
+
+            const newData = {
                 user_id : user_id,
                 type_publish : type_publish,
                 comentary : comentary,
                 volunteer_quantity : Number(volunteer_quantity),
                 trash_quantity : Number(trash_quantity),
                 reation : Number(reation),
-                image_url : image_url,
-                video_url : video_url,
+                image_url,
+                video_url,
                 location : location
             }
 
-            const publish = await create.execute(newUser)
+            const publish = await create.execute(newData)
 
             return response.status(201).json(publish)
+            
         } catch (error : any) {
             return response.status(404).json({ message : error.message })
         }
@@ -157,10 +223,6 @@ export class PublishController {
             return response.status(400).json({ message : "Publicação não encontrada!"})
         }
 
-        if(!reation) {
-            return
-        }
-
         const drizzlePublishRepository = new DrizzlePublishRepository()
         const addReation = new AddReation(drizzlePublishRepository)
 
@@ -181,10 +243,6 @@ export class PublishController {
 
         if(!id_publish) {
             return response.status(400).json({ message : "Publicação não encontrada!"})
-        }
-
-        if(!reation) {
-            return
         }
 
         const drizzlePublishRepository = new DrizzlePublishRepository()

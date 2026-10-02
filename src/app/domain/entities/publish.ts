@@ -10,7 +10,7 @@ export class Publish {
         public volunteer_quantity? : number,
         public trash_quantity? : number,
         public reation? : number,
-        public image_url : string[] = [],
+        public image_url? : string[],
         public video_url? : string,
         public location? : string,
         public id_publish? : string

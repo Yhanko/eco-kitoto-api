@@ -7,7 +7,7 @@ export interface CreatePublishDTO {
     volunteer_quantity? : number | undefined,
     trash_quantity? : number | undefined,
     reation? : number | undefined,
-    image_url : string[],
-    video_url? : string,
+    image_url? : string[],
+    video_url? : string | undefined,
     location? : string
 }

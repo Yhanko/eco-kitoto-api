@@ -167,16 +167,19 @@ export class DrizzlePublishRepository implements PublishRepository {
         
         await db.update(publishTable).set({
             reation : reation + 1
-        }).returning()
+        })
         .where(eq(publishTable.id_publish, id_publish))
+        .returning()
     }
 
 //remove reation
     async removeReation(id_publish: string, reation: number): Promise<void> {
+        
         await db.update(publishTable).set({
             reation : reation - 1
-        }).returning()
+        })
         .where(eq(publishTable.id_publish, id_publish))
+        .returning()
     }
 
 //delete

@@ -7,19 +7,31 @@ class CloudinaryServices {
    * @param imagePath Caminho do arquivo (ex.: ./uploads/foto.jpg)
    * @returns URL segura da imagem no Cloudinary
    */
-  async upload(fileBuffer: Buffer, fileName: string, folder: string): Promise<string> {
+  async upload(
+    fileBuffer: Buffer, 
+    fileName: string, 
+    folder: string, 
+    resourceType: 'image' | 'video' = 'image'
+  ): Promise<string> {
     
     return new Promise((resolve, reject) => {
+
+      //monta as opçoes dinamicamente independente do tipo
+      const uploadOptions: Record<string, any> = {
+        folder,
+        public_id: fileName,
+        overwrite: true,
+        resource_type: resourceType,
+      }
+
+      //se for imagem, define a formatação/conversão padrao
+      if(resourceType === 'image') {
+        uploadOptions.format = 'jpg'
+      }
       
-    cloudinary.uploader.upload_stream(
-        {
-          folder,
-          public_id: fileName,
-          format: "jpg",
-          overwrite: true,
-          resource_type: "image",
-        },
-        (error:any, result:any) => {
+      cloudinary.uploader.upload_stream(
+        uploadOptions,
+        (error : any, result : any) => {
           
             if (error) return reject(error);
           
@@ -35,7 +47,7 @@ class CloudinaryServices {
    * Remove uma imagem do Cloudinary
    * @param publicId
    */
-  async destroy(publicId: string): Promise<void> {
+  async destroy(publicId: string, resourceType: 'image' | 'video' = 'image'): Promise<void> {
     
     return new Promise((resolve, reject) => {
       
@@ -43,7 +55,7 @@ class CloudinaryServices {
         
             publicId,
         
-            { resource_type: "image" },
+            { resource_type: resourceType },
         
             (error, result) => {
           

@@ -12,6 +12,7 @@ import { materialRoutes } from "./materialRoute";
 import { logsRouter } from "./logsRoute";
 import { emailRouter } from "./emailRoute";
 import { publishRouter } from "./publishRoute";
+import { comentaryRouter } from "./comentaryRoute";
 
 const systemRouter = Router()
 
@@ -41,5 +42,7 @@ const systemRouter = Router()
     systemRouter.use("/eco-kitoto", emailRouter)
 //published route
     systemRouter.use("/eco-kitoto", publishRouter)
+//comentary route
+    systemRouter.use("/eco-kitoto", comentaryRouter)
 
 export { systemRouter }

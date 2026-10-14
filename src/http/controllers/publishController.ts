@@ -26,6 +26,7 @@ export class PublishController {
             const publish = await listAll.execute()
 
             return response.status(200).json(publish)
+
         } catch (error : any) {
             return response.status(404).json({ message : error.message })
         }
@@ -47,6 +48,7 @@ export class PublishController {
             const publish = await myPublish.execute(id_user)
             
             return response.status(200).json(publish)
+
         } catch (error : any) {
             return response.status(404).json({ message : error.message })
         }
@@ -66,6 +68,8 @@ export class PublishController {
 
         try {
             const reation = await publishReation.execute(id_publish)
+
+            return response.status(200).json(reation)
             
         } catch (error : any) {
             return response.status(404).json({ message : error.message })
@@ -208,6 +212,7 @@ export class PublishController {
                     location)
 
                 return response.status(201).json(publish)
+
         } catch (error : any) {
             return response.status(404).json({ message : error.message })
         }
@@ -230,6 +235,7 @@ export class PublishController {
                 const publish = await addReation.execute(id_publish, Number(reation))
 
                 return response.status(201).json(publish)
+
         } catch (error : any) {
             return response.status(404).json({ message : error.message })
         }
@@ -249,9 +255,9 @@ export class PublishController {
         const removeReation = new RemoveReation(drizzlePublishRepository)
 
         try {
-                const publish = await removeReation.execute(id_publish, Number(reation))
+            const publish = await removeReation.execute(id_publish, Number(reation))
 
-                return response.status(201).json(publish)
+            return response.status(201).json(publish)
         } catch (error : any) {
             return response.status(404).json({ message : error.message })
         }

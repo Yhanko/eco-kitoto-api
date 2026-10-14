@@ -135,6 +135,49 @@ export class DrizzlePublishRepository implements PublishRepository {
         }
     }
 
+//list my publish
+    async findById(id_publish: string): Promise<Publish[] | null> {
+        const listAll = await db.select({
+            //publish data
+            id_publish : publishTable.id_publish,
+            type_publish : publishTable.type_publish,
+            comentary : publishTable.comentary,
+            volunteer_quantity : publishTable.volunteer_quantity,
+            trash_quantity : publishTable.trash_quantity,
+            image_url : publishTable.image_url,
+            video_url : publishTable.video_url,
+            location : publishTable.location,
+            reation : publishTable.reation,
+            createdAt : publishTable.createdAt,
+            
+            //user data
+            user_id : publishTable.user_id,
+            userName : userTable.name,
+            userProfile : userTable.typeUser,   
+        })
+        .from(publishTable)
+        .innerJoin(userTable, eq(publishTable.user_id, userTable.iduser))
+        .where(eq(publishTable.id_publish, id_publish))
+        .orderBy(desc(publishTable.createdAt))  
+        
+        return listAll.map(p => ({
+            id_publish : p.id_publish ?? "",
+            type_publish : p.type_publish!,
+            comentary : p.comentary!,
+            volunteer_quantity : p.volunteer_quantity ?? undefined,
+            trash_quantity : p.trash_quantity ?? undefined,
+            image_url : p.image_url ?? [],
+            video_url : p.video_url ?? "",
+            location : p.location ?? "",
+            reation : p.reation ?? 0,
+
+            user_id : p.user_id ?? "",
+            userName : p.userName ?? "",
+            userProfile : p.userProfile ?? "",
+            createdAt : p.createdAt!
+        }))
+    }
+
 //update
     async update(id_publish: string, type_publish: typePublish, comentary: string, 
         volunteer_quantity: number, trash_quantity: number, location: string): Promise<Publish> {

@@ -128,7 +128,7 @@ export const relatoryTable = pgTable("relatorio", {
     date_send : timestamp("data_envio").defaultNow()
 });
 
-// publish
+// publish table
 export const publishTable = pgTable("publicacao", {
     id_publish : uuid("id_publicacao").defaultRandom().primaryKey(),
     user_id : uuid("id_usuario").notNull().references( () => userTable.iduser, {
@@ -143,6 +143,22 @@ export const publishTable = pgTable("publicacao", {
     image_url : text("imagem_url").array().default([]),
     video_url : text("video_url"),
     location : text("localicacao"),
+    createdAt : timestamp("dtcadastro").defaultNow()
+})
+
+// comentary table
+export const comentaryTable = pgTable("comentario", {
+    id_comentary : uuid("id_comentario").defaultRandom().primaryKey(),
+    text_comentary : text("comentario").notNull(),
+    reation : integer("reacao").default(0),
+    user_id : uuid("id_usuario").notNull().references( () => userTable.iduser, {
+        onDelete : "cascade",
+        onUpdate : "cascade"
+    }),
+    publish_id : uuid("id_publicacao").notNull().references( () => publishTable.id_publish, {
+        onDelete : "cascade",
+        onUpdate : "cascade"
+    }),
     createdAt : timestamp("dtcadastro").defaultNow()
 })
 

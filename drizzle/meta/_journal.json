@@ -29,6 +29,13 @@
       "when": 1790856252111,
       "tag": "0003_thick_sage",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791990092255,
+      "tag": "0004_calm_giant_man",
+      "breakpoints": true
     }
   ]
 }

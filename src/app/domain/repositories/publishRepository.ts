@@ -10,5 +10,6 @@ export interface PublishRepository {
     ) : Promise<Publish>
     addReation(id_publish : string, reation : number) : Promise<void>
     removeReation(id_publish : string, reation : number) : Promise<void>
+    findById(id_publish : string) : Promise<Publish[] | null>
     delete(id_publish : string) : Promise<void>
 }
